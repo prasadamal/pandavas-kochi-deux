@@ -139,6 +139,12 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
         <span class="d">Kochi Water Metro, Fort Kochi to Mattancherry. Boats leave every minute. Catch one, walk the deck and deliver Shibu's parcel.</span>
         <span class="go" id="m6s">Play mission 6 ›</span>
       </button>
+      <button class="mcard" id="m7" type="button">
+        <span class="yr">2026</span>
+        <span class="t">The House on the Backwater</span>
+        <span class="d">A house on the backwater where a judge is holding four prosecutors. The front is a kill zone. Come in from the water.</span>
+        <span class="go" id="m7s">Play mission 7 ›</span>
+      </button>
     </div>
     <div class="rot">Turn your phone sideways for the best view</div>
     <div class="foot">
@@ -537,7 +543,7 @@ function moveActor(w,a,dx,dy){const n=Math.ceil(Math.max(Math.abs(dx),Math.abs(d
     if(sx&&!circleHits(w,a.x+sx,a.y,a.r)){a.x+=sx;moved=true;}else if(sx&&!sy){for(const k of [-1,1])if(!circleHits(w,a.x+sx*.7,a.y+k*Math.abs(sx)*.7,a.r)&&!circleHits(w,a.x,a.y+k*Math.abs(sx),a.r)){a.y+=k*Math.abs(sx)*.7;break;}}
     if(sy&&!circleHits(w,a.x,a.y+sy,a.r)){a.y+=sy;moved=true;}else if(sy&&!sx){for(const k of [-1,1])if(!circleHits(w,a.x+k*Math.abs(sy),a.y,a.r)){a.x+=k*Math.abs(sy)*.7;break;}}}
   return moved;}
-function los(w,x0,y0,x1,y1){const d=Math.hypot(x1-x0,y1-y0),n=Math.ceil(d/10);for(let i=1;i<n;i++){const x=x0+(x1-x0)*i/n,y=y0+(y1-y0)*i/n;if(VIEW[w.map.get(Math.floor(x/T),Math.floor(y/T))])return false;}return true;}
+function los(w,x0,y0,x1,y1){if(w.player&&x1===w.player.x&&y1===w.player.y&&w.map.get(Math.floor(x1/T),Math.floor(y1/T))===TL.BUSH)return false;const d=Math.hypot(x1-x0,y1-y0),n=Math.ceil(d/10);for(let i=1;i<n;i++){const x=x0+(x1-x0)*i/n,y=y0+(y1-y0)*i/n;if(VIEW[w.map.get(Math.floor(x/T),Math.floor(y/T))])return false;}return true;}
 function computeFlow(w){const m=w.map,W=m.w,H=m.h;if(!w.flow){w.flow=new Int16Array(W*H);w.fq=new Int32Array(W*H);}const F=w.flow,q=w.fq;F.fill(-1);
   const P=w.player,sx=clamp((P.x/T)|0,0,W-1),sy=clamp((P.y/T)|0,0,H-1);let h=0,t=0;F[sy*W+sx]=0;q[t++]=sy*W+sx;
   while(h<t){const i=q[h++],x=i%W,y=(i/W)|0,d=F[i]+1;if(d>260)continue;
@@ -1211,6 +1217,7 @@ function drawHUD(w){
   if(w.dayClock){const h=Math.floor(w.clock/60),mn=Math.floor(w.clock%60);ctx.font='800 12px Inter,sans-serif';ctx.textAlign='center';ctx.textBaseline='top';ctx.fillStyle=(w.clock/60>=17||w.clock/60<6)?'#9fb0ff':'#f2d16b';ctx.fillText((h%12||12)+':'+String(mn).padStart(2,'0')+(h<12?' AM':' PM')+(w.torch===false?' · torch off':''),SW/2,34);}
   if(P.car){const kmh=Math.round(Math.abs(P.car.speed)/270*120);ctx.font='800 13px Inter,sans-serif';ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillStyle='#f6ecd9';ctx.fillText(kmh+' km/h',SW/2,SH-26);ctx.fillStyle='rgba(255,255,255,.2)';ctx.fillRect(SW/2-60,SH-20,120,5);ctx.fillStyle=kmh>100?'#e2543c':'#e7b553';ctx.fillRect(SW/2-60,SH-20,120*Math.min(1,kmh/120),5);}
   if(w.depT!==undefined&&w.boats){const sec=Math.max(0,Math.ceil(w.depT));ctx.font='800 12px Inter,sans-serif';ctx.textAlign='center';ctx.textBaseline='top';ctx.fillStyle='#7fd1ff';ctx.fillText('NEXT BOAT 0:'+String(sec).padStart(2,'0'),SW/2,12);}
+  if(w.dz>0){ctx.fillStyle='rgba(200,20,10,'+(0.15+0.15*Math.sin(w.t*12))+')';ctx.fillRect(0,0,SW,SH);ctx.font="400 40px Anton,Impact,sans-serif";ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#fff';ctx.fillText('LEAVE NOW · '+Math.max(0,1.4-w.dz).toFixed(1)+'s',SW/2,SH*.35);}
   // hurt vignette
   if(w.t-w.lastHurt<.35){ctx.fillStyle='rgba(180,20,10,'+(0.25*(1-(w.t-w.lastHurt)/.35))+')';ctx.fillRect(0,0,SW,SH);}
 }
@@ -1429,7 +1436,7 @@ function buildM2(){
   m.labels.push({x:4*T,y:8*T,text:'BACKWATERS',font:"800 11px Inter,sans-serif",c:'rgba(200,225,255,.4)'},{x:52*T,y:84*T,text:'FORT KOCHI BEACH',font:"800 12px Inter,sans-serif",c:'rgba(90,60,30,.55)'});
   m.zones=[{x1:86,y1:44,x2:100,y2:58,n:'SANTA CRUZ BASILICA'},{x1:32,y1:8,x2:46,y2:21,n:'ERNAKULAM SHIVA TEMPLE'},{x1:32,y1:62,x2:46,y2:76,n:'MATTANCHERRY JAMA MASJID'},{x1:18,y1:83,x2:92,y2:88,n:'CHINESE FISHING NETS'},{x1:14,y1:26,x2:30,y2:40,n:'MARINE MALL'},{x1:0,y1:80,x2:106,y2:92,n:'FORT KOCHI'},{x1:0,y1:0,x2:14,y2:80,n:'MARINE DRIVE'},{x1:10,y1:58,x2:46,y2:80,n:'MATTANCHERRY'},{x1:44,y1:0,x2:52,y2:80,n:'MG ROAD'},
     {x1:64,y1:0,x2:106,y2:30,n:'PANAMPILLY NAGAR'},{x1:64,y1:30,x2:106,y2:80,n:'KADAVANTHRA'},{x1:0,y1:0,x2:106,y2:92,n:'ERNAKULAM SOUTH'}];
-  return m;}
+  addBushes(m);applyShape(m);return m;}
 function m1Extras(m){
   // stream through the forest, with stepping stones where it crosses paths
   const pts=[[39,40],[46,38],[52,41],[58,37],[64,39],[71,35],[78,38],[85,36],[91,37]];
@@ -1458,7 +1465,7 @@ function spawnTraffic(w,n){const m=w.map;let made=0,tries=0;
   while(made<n&&tries++<600){const h=Math.random()<.55;let x,y,dir,road;
     if(h){const r=pick(m.hroads);dir=Math.random()<.5?0:2;road=r.y0;x=(r.x1+1+Math.random()*(r.x2-r.x1-2))*T;y=(r.y0+(dir===0?1:3))*T;if(m.vAt((x/T)|0,(y/T)|0)>=0)continue;}
     else{const r=pick(m.vroads);dir=Math.random()<.5?1:3;road=r.x0;y=(r.y1+1+Math.random()*(r.y2-r.y1-2))*T;x=(r.x0+(dir===1?3:1))*T;if(m.hAt((x/T)|0,(y/T)|0)>=0)continue;}
-    if(w.cars.some(c=>Math.hypot(c.x-x,c.y-y)<110))continue;if(Math.hypot(x-w.player.x,y-w.player.y)<4*T)continue;
+    if(SOLID[w.map.get(Math.floor(x/T),Math.floor(y/T))])continue;if(w.cars.some(c=>Math.hypot(c.x-x,c.y-y)<110))continue;if(Math.hypot(x-w.player.x,y-w.player.y)<4*T)continue;
     const kr=Math.random(),kind=kr<.36?'car':kr<.48?'hatch':kr<.66?'bike':kr<.84?'auto':kr<.94?'bus':'jeep';
     const col=kind==='auto'?pick(['#f2c230','#e8b923']):kind==='bus'?pick(['#1f6fb2','#c0392b','#16a085','#8e44ad','#d35400']):pick(['#f2f2f2','#c9ccd1','#e6e6e6','#b8202a','#1f2a44','#5a5f66','#7b1e2b','#2d6a4f','#9aa3ad','#e0e0e0']);
     const c=makeCar(kind,x,y,DIRANG[dir],kind==='bike'?pick(['#c0392b','#2e86c1','#f2f2f2','#1d1d1d','#e8b923','#7a1f4a']):kind==='jeep'?pick(['#2d4a2a','#f2f2f2','#7a1e2b']):col);c.driver='ai';if(kind==='bike'){c.rider=civLook();c.rider.helmet=Math.random()<.8?pick(['#1d1d1d','#c0392b','#f2f2f2','#2e86c1']):null;c.rider.umbrella=null;}c.ai={dir,road,plan:null,cruise:(kind==='bus'?95:kind==='auto'?80:kind==='bike'?120:110)+Math.random()*30,ghost:0};w.cars.push(c);made++;}}
@@ -1790,6 +1797,7 @@ function addSideJobs(w){
   const drops=[[60.5*T,24.5*T],[80.5*T,60.5*T],[47.5*T,78.5*T]];
   drops.forEach(([x,y],k)=>w.interacts.push({x,y,r:34,label:'DELIVER TIFFIN',on:()=>!!w.job&&w.job.i===k,fn:()=>deliverTiffin(w,k)}));
   w.drops=drops;
+  w.interacts.push({x:72.5*T,y:58.5*T,r:34,label:'HOSPITAL',fn:()=>hospitalVisit(w)},{x:52.5*T,y:40.5*T,r:34,label:'POLICE STATION',fn:()=>policeVisit(w)});
   w.interacts.push({x:26.5*T,y:41.5*T,r:34,label:'SHOP',fn:()=>shopOpen(w)});
   w.pickups.push({x:93*T,y:51*T,kind:'health'},{x:39*T,y:15*T,kind:'speed'},{x:39*T,y:69*T,kind:'power'});}
 function takeTiffin(w){if(w.job){toast(w,'You still have tiffins to deliver');return;}
@@ -1990,7 +1998,79 @@ function updateGrens(w,dt){if(!w.grens)return;for(const g of w.grens){g.t+=dt;if
 function useMed(w){const p=w.player;if(!progress.med){toast(w,'No medkits. Buy them at the shop.');return;}if(p.hp>=p.maxhp)return;
   progress.med--;saveProgress();p.hp=Math.min(p.maxhp,p.hp+60);toast(w,'Medkit used');sfx('pick');}
 
-const MISSIONS=[M1,M2,M3,M4,M5,M6];
+/* ---------- Kochi's outline: land only inside this shape, the rest is backwater and sea ---------- */
+function pointInPoly(x,y,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const xi=poly[i][0],yi=poly[i][1],xj=poly[j][0],yj=poly[j][1];if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi))c=!c;}return c;}
+const KOCHI_SHAPE=[[8,4],[30,0],[106,0],[106,64],[98,72],[104,84],[84,92],[60,88],[40,92],[18,86],[12,70],[8,56]];
+function applyShape(m){
+  for(let y=0;y<m.h;y++)for(let x=0;x<m.w;x++)if(!pointInPoly(x+.5,y+.5,KOCHI_SHAPE))m.t[y*m.w+x]=TL.WATER;
+  const inside=(x,y)=>pointInPoly(x/T,y/T,KOCHI_SHAPE);
+  m.roofs=m.roofs.filter(r=>inside((r.x+r.w/2)*T,(r.y+r.h/2)*T));
+  m.props=m.props.filter(p=>inside(p.x,p.y));
+  m.pgrid=new Map();for(const p of m.props)if(p.solid){const k=((p.y/T)|0)*m.w+((p.x/T)|0);let l=m.pgrid.get(k);if(!l)m.pgrid.set(k,l=[]);l.push(p);}
+  m.pidx=null;m.chunks.clear();m.cchunks.clear();}
+function addBushes(m){for(let y=0;y<m.h;y++)for(let x=0;x<m.w;x++)if(m.get(x,y)===TL.LAWN&&rnd()<.16)m.set(x,y,TL.BUSH);}
+
+/* ---------- hospital and police station ---------- */
+function hospitalVisit(w){const p=w.player;if(p.hp>=p.maxhp&&!w.wanted){say([['Nurse','You look healthy, machane. Next!']]);return;}
+  if(!spendCash(300)){say([['Nurse','Deposit first. Rs 300, then we see the wounds.']]);return;}
+  p.hp=p.maxhp;p.down=false;toast(w,'Treated. Rs 300 paid.');say([['Nurse','Two more inches and it would have been a different story, machane.']]);}
+function policeVisit(w){if(!w.wanted){say([['Constable','Enough, machane. Sit, sit. No trouble today.']]);return;}
+  if(!spendCash(500)){say([['Inspector','Rs 500 for the file, Sony. Then we forget your face. Without it, we remember it very well.']]);return;}
+  w.wanted=0;w.wantedCool=0;for(const c of w.cars)if(c.kind==='police')c.retire=true;toast(w,'File closed. Wanted cleared.');
+  say([['Inspector','Go, go. Don\'t let me see you before next Onam.']]);}
+
+/* ---------- Varathan-inspired house: the front is a kill zone ---------- */
+function buildHouse(){const W=70,H=50,m=new TileMap(W,H,TL.GRASS);m.treeGround=TL.GRASS;m.palmGround=TL.GRASS;m.doorFloor=TL.FLOOR;m.zones=[];m.parked=[];
+  m.rect(58,0,12,50,TL.WATER);m.rect(52,36,6,5,TL.PAVE);
+  m.box(10,8,40,33,TL.WALL);m.rect(11,9,38,31,TL.LAWN);
+  m.set(29,40,TL.DOOR);m.set(30,40,TL.DOOR);m.set(29,8,TL.GATE);m.set(30,8,TL.GATE);
+  m.box(18,13,22,13,TL.LWALL);m.rect(19,14,20,11,TL.FLOOR);m.set(28,25,TL.DOOR);m.set(29,25,TL.DOOR);
+  for(let x=20;x<38;x+=3){m.prop({k:'bench',x:(x+.5)*T,y:17.5*T});m.prop({k:'bench',x:(x+.5)*T,y:21.5*T});}
+  for(const [x,y] of [[12,10],[47,10],[12,38],[47,38],[14,24],[44,24],[60,6],[64,30]])m.set(x,y,TL.PALM);
+  for(let x=12;x<48;x+=5)m.set(x,33,TL.BUSH);
+  m.zones=[{x1:8,y1:0,x2:52,y2:12,n:'KILL ZONE · KEEP OUT'},{x1:18,y1:13,x2:40,y2:25,n:'THE HOUSE ON THE BACKWATER'},{x1:0,y1:0,x2:W,y2:H,n:'BACKWATERS'}];
+  return m;}
+
+const M7={idx:6,key:'m7',title:'The House on the Backwater',
+  create(){seed=2031;const m=buildHouse(),w=newWorld(m);w.mi=1;w.cp=0;w.title=this.title;w.mission=this;w.night=false;w.allowCars=false;w.pspeed=130;w.followGap=26;w.noPolice=true;
+    w.deathRect={x1:8,y1:0,x2:52,y2:12};w.dz=0;w.freed=0;
+    const P=w.player=addActor(w,{team:'player',look:LK.sony,r:9,x:30*T,y:44*T,angle:-Math.PI/2,hp:100,maxhp:100});P.gun='pistol';P.mag=12;P.reserve=36;P.stam=100;
+    w.gang=[['Bheeman',LK.bheeman],['Shibu',LK.shibu]].map(([name,look],i)=>applyRole(addActor(w,{team:'ally',name,look,x:(27+i*6)*T,y:44*T,angle:-Math.PI/2,gun:true,hp:100,maxhp:100,r:9})));
+    w.allies.push(...w.gang);
+    w.boss=addActor(w,{team:'boss',ai:null,look:LK.prabhuji,x:28*T,y:20*T,angle:Math.PI/2,hp:Math.round(480*(progress.hard?1.3:1)),maxhp:Math.round(480*(progress.hard?1.3:1)),gun:true,dmg:9,spread:.12,rate:1.3,burst:true,sight:12*T,active:false,state:'idle',r:10,name:'The Judge'});
+    w.hostages=[];
+    for(let i=0;i<4;i++){const h=addActor(w,{team:'civ',ai:null,look:civLook(),x:(22+i*4)*T,y:23*T,angle:-Math.PI/2,r:8,sit:true});h.freedFlag=false;w.hostages.push(h);
+      w.interacts.push({x:h.x,y:h.y,r:40,label:'FREE HOSTAGE',on:()=>w.stage>=2&&!h.freedFlag,fn:()=>{h.freedFlag=true;h.sit=false;h.team='vip';w.freed++;say([['Prosecutor','Thank you, thank you. Please, get us out of here.']],()=>this.setObj(w));}});}
+    for(let i=0;i<4;i++)addActor(w,{team:'enemy',ai:'goon',look:i%2?LK.goon2:LK.goon,x:(24+i*4)*T,y:17*T,angle:Math.PI/2,hp:Math.round(100*(progress.hard?1.3:1)),maxhp:Math.round(100*(progress.hard?1.3:1)),gun:true,dmg:7,spread:.17,rate:1.3,sight:9*T,active:false,state:'idle',r:9});
+    w.stage=0;this.setObj(w);return w;},
+  applyCP(){},
+  intro(w){say([['','A backwater house, the kind with the gate painted red. The rich man who lives here sits on the bench of the court.'],['','Everyone in the Kochi courts knows the rule: whoever goes near the front of this house does not come back.'],['Sony','Then we come in from the back, where the water is.'],['Shibu','Machane... four prosecutors inside. They are still alive. Let us move.']],()=>toast(w,'Stay out of the red zone!'));},
+  setObj(w){const b=w.boss;
+    if(w.stage===0)w.obj={text:'Come in through the back gate. The front is a kill zone.',tgt:()=>({x:30*T,y:40*T})};
+    else if(w.stage===1)w.obj={text:'Stop The Judge in the hall',tgt:()=>b};
+    else if(w.stage===2)w.obj={text:'Free the prosecutors ('+w.freed+'/4)',tgt:null};
+    else w.obj={text:'Get out through the back gate with the prosecutors',tgt:()=>({x:30*T,y:41*T})};},
+  update(w,dt){const P=w.player,b=w.boss,R=w.deathRect;
+    const inZone=P.x>R.x1*T&&P.x<R.x2*T&&P.y>R.y1*T&&P.y<R.y2*T;
+    if(inZone&&!P.down){w.dz+=dt;if(w.dz>1.4){P.hp=0;w.dz=0;return fail('TOO CLOSE TO THE HOUSE','The guards at the front shoot anyone who comes near the red gate. Go in through the back of the house, by the water.');}}
+    else w.dz=Math.max(0,w.dz-dt*2);
+    if(w.stage===0&&P.x>18*T&&P.x<40*T&&P.y>13*T&&P.y<25*T){w.stage=1;b.active=true;b.state='combat';for(const a of w.actors)if(a.team==='enemy'){a.active=true;a.state='combat';}toast(w,'The Judge sees you!');sfx('alert');}
+    if((w.stage===1)&&!b.down){b.cool=(b.cool||0)-dt;if(b.cool<=0&&los(w,b.x,b.y,P.x,P.y)&&Math.hypot(P.x-b.x,P.y-b.y)<14*T){shoot(w,b,Math.atan2(P.y-b.y,P.x-b.x),.12,9,'e');b.cool=1.2*(.8+Math.random()*.4);}}
+    if(w.stage===2&&w.freed>=4){w.stage=3;toast(w,'All four are free. Run for the back gate!');}
+    if(w.stage===3&&P.y>39*T&&P.x>26*T&&P.x<34*T){w.stage=4;complete(w,'The prosecutors walked out through the back gate. The house on the backwater is still standing, and nobody talks about it.');return;}
+    this.setObj(w);},
+  bossDown(w,k){if(k.down)return;k.down=true;k.hp=0;k.moving=false;w.stage=2;
+    say([['The Judge','Court is... adjourned...'],['Sony','Free them. Then we leave by the water.']],()=>this.setObj(w));},
+  noise(w,s){if(s===w.player&&w.stage>=1)alertGoons(w,s.x,s.y,14*T);},
+  drawUnder(g,w){const R=w.deathRect,fl=.25+.1*Math.sin(w.t*4);g.fillStyle='rgba(200,20,10,'+fl+')';g.fillRect(R.x1*T,R.y1*T,(R.x2-R.x1)*T,(R.y2-R.y1)*T);
+    g.fillStyle='rgba(255,230,180,.9)';g.font='800 14px Inter,sans-serif';g.textAlign='center';g.fillText('KILL ZONE',((R.x1+R.x2)/2)*T,(R.y2*T)-6);},
+  onDown(){}};
+
+/* ---------- Pooram nights: fireworks over the temple after dark ---------- */
+function festivalFx(w){if(!w.dayClock)return;const h=w.clock/60;if(h<19||h>=20||Math.random()>.08)return;
+  const fx=39*T+(Math.random()-.5)*90,fy=12*T;for(let i=0;i<14;i++)w.parts.push({x:fx,y:fy-60-Math.random()*40,vx:(Math.random()-.5)*120,vy:(Math.random()-.5)*120,life:.9,max:.9,c:['#ffd35a','#ff7a5c','#7fd1ff','#ffffff'][i%4],s:2.5});}
+
+const MISSIONS=[M1,M2,M3,M4,M5,M6,M7];
 
 
 
@@ -1998,7 +2078,7 @@ const G={state:'menu',mi:0};
 let progress={};try{progress=JSON.parse(localStorage.getItem('pandavas-progress')||'{}')||{};}catch(e){progress={};}
 function saveProgress(){try{localStorage.setItem('pandavas-progress',JSON.stringify(progress));}catch(e){}}
 function showScreen(id){for(const s of document.querySelectorAll('.screen'))s.classList.toggle('on',s.id===id);$('touch').classList.toggle('on',input.touch&&(id==null||id==='dialog')&&G.state!=='menu');}
-function refreshMenu(){if(!window.__shopInit){window.__shopInit=1;$('shopClose').onclick=()=>{G.state='play';showScreen(null);};}$('m6s').innerHTML=progress.m6?'<span class="done">✓ Completed</span> · play again ›':'Play mission 6 ›';$('diff').textContent='Difficulty: '+(progress.hard?'Hard':'Normal');$('comicsT').textContent='Cash Rs '+(progress.cash||0)+' · Comics '+((progress.comics||[]).length)+'/6';$('m5s').innerHTML=progress.m5?'<span class="done">✓ Completed</span> · play again ›':'Play mission 5 ›';$('m1s').innerHTML=progress.m1?'<span class="done">✓ Completed</span> · play again ›':'Play mission 1 ›';$('m2s').innerHTML=progress.m2?'<span class="done">✓ Completed</span> · play again ›':'Play mission 2 ›';$('m4s').innerHTML=progress.m4?'<span class="done">✓ Completed</span> · play again ›':'Play mission 4 ›';$('m3s').innerHTML=progress.m3?'<span class="done">✓ Completed</span> · play again ›':'Play mission 3 ›';$('snd').textContent='Sound: '+(AU.on?'on':'off');}
+function refreshMenu(){$('m7s').innerHTML=progress.m7?'<span class="done">✓ Completed</span> · play again ›':'Play mission 7 ›';if(!window.__shopInit){window.__shopInit=1;$('shopClose').onclick=()=>{G.state='play';showScreen(null);};}$('m6s').innerHTML=progress.m6?'<span class="done">✓ Completed</span> · play again ›':'Play mission 6 ›';$('diff').textContent='Difficulty: '+(progress.hard?'Hard':'Normal');$('comicsT').textContent='Cash Rs '+(progress.cash||0)+' · Comics '+((progress.comics||[]).length)+'/6';$('m5s').innerHTML=progress.m5?'<span class="done">✓ Completed</span> · play again ›':'Play mission 5 ›';$('m1s').innerHTML=progress.m1?'<span class="done">✓ Completed</span> · play again ›':'Play mission 1 ›';$('m2s').innerHTML=progress.m2?'<span class="done">✓ Completed</span> · play again ›':'Play mission 2 ›';$('m4s').innerHTML=progress.m4?'<span class="done">✓ Completed</span> · play again ›':'Play mission 4 ›';$('m3s').innerHTML=progress.m3?'<span class="done">✓ Completed</span> · play again ›':'Play mission 3 ›';$('snd').textContent='Sound: '+(AU.on?'on':'off');}
 function startMission(i,cp){G.mi=i;progress.last=i;saveProgress();const w=MISSIONS[i].create(cp||0);W_=w;loadoutFor(w,i);w.cam.x=w.player.x;w.cam.y=w.player.y;w.cam.z=baseZoom();computeFlow(w);G.state='play';showScreen(null);
   try{if(input.touch&&document.documentElement.requestFullscreen&&!document.fullscreenElement)document.documentElement.requestFullscreen().then(()=>{try{screen.orientation.lock('landscape').catch(()=>{});}catch(e){}}).catch(()=>{});}catch(e){}
   MISSIONS[i].intro(w);}
@@ -2013,7 +2093,7 @@ function complete(w,text){G.state='done';progress['m'+(G.mi+1)]=1;saveProgress()
 function pauseGame(){G.state='pause';showScreen('pause');if(AU.sg)AU.sg.gain.value=0;}
 function resumeGame(){G.state='play';showScreen(null);}
 function toMenu(){G.state='menu';W_=null;refreshMenu();showScreen('menu');if(AU.sg)AU.sg.gain.value=0;}
-$('m1').onclick=()=>{audioInit();startMission(0,0);};$('m2').onclick=()=>{audioInit();startMission(1,0);};$('m3').onclick=()=>{audioInit();startMission(2,0);};$('m4').onclick=()=>{audioInit();startMission(3,0);};$('m5').onclick=()=>{audioInit();startMission(4,0);};$('m6').onclick=()=>{audioInit();startMission(5,0);};$('cont').onclick=()=>{audioInit();startMission(progress.last||0,0);};$('diff').onclick=()=>{progress.hard=!progress.hard;saveProgress();refreshMenu();};
+$('m1').onclick=()=>{audioInit();startMission(0,0);};$('m2').onclick=()=>{audioInit();startMission(1,0);};$('m3').onclick=()=>{audioInit();startMission(2,0);};$('m4').onclick=()=>{audioInit();startMission(3,0);};$('m5').onclick=()=>{audioInit();startMission(4,0);};$('m6').onclick=()=>{audioInit();startMission(5,0);};$('m7').onclick=()=>{audioInit();startMission(6,0);};$('cont').onclick=()=>{audioInit();startMission(progress.last||0,0);};$('diff').onclick=()=>{progress.hard=!progress.hard;saveProgress();refreshMenu();};
 $('retry').onclick=()=>startMission(G.mi,W_?W_.cp:0);$('fmenu').onclick=toMenu;$('dmenu').onclick=toMenu;$('pmenu').onclick=toMenu;
 $('next').onclick=()=>startMission(G.mi+1,0);$('resume').onclick=resumeGame;$('prestart').onclick=()=>startMission(G.mi,W_?W_.cp:0);
 const toggleSnd=()=>{AU.on=!AU.on;$('psnd').textContent='Sound: '+(AU.on?'on':'off');refreshMenu();};$('snd').onclick=toggleSnd;$('psnd').onclick=toggleSnd;
@@ -2028,6 +2108,8 @@ function update(w,dt){
   if(input.medQ){input.medQ=false;useMed(w);}
   if(input.torchQ){input.torchQ=false;w.torch=w.torch===false;toast(w,'Torch '+(w.torch===false?'off':'on'));}
   if(w.grens)updateGrens(w,dt);
+  {const bt=w.map.get(Math.floor(w.player.x/T),Math.floor(w.player.y/T));if(bt===TL.BUSH&&!w.inBush){w.inBush=true;toast(w,'Hidden in the bush. They cannot see you.');}else if(bt!==TL.BUSH)w.inBush=false;}
+  if(w.dayClock)festivalFx(w);
   w.prompt=findPrompt(w);
   if(input.actQ){input.actQ=false;const pr=w.prompt;if(pr){if(pr.car)exitCar(w);else if(pr.carObj){if(pr.hire)hireAuto(w,pr.carObj);else enterCar(w,pr.carObj);}else if(pr.talk)talkTo(w,pr.talk);else if(pr.fn)pr.fn();}}
   if(G.state!=='play')return;
