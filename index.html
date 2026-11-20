@@ -127,11 +127,18 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
         <span class="d">Cochin International Airport, past midnight. Sethu Mudaliar is boarding a cargo jet with the Gulf gold. Stop him at the door.</span>
         <span class="go" id="m4s">Play mission 4 ›</span>
       </button>
+      <button class="mcard" id="m5" type="button">
+        <span class="yr">2026</span>
+        <span class="t">The Last Show</span>
+        <span class="d">Kadavanthra, Friday night, Screen 2. Kamath is in the front row. Get in, shoot through the audience, and corner him in the projection booth.</span>
+        <span class="go" id="m5s">Play mission 5 ›</span>
+      </button>
     </div>
     <div class="rot">Turn your phone sideways for the best view</div>
     <div class="foot">
       <span>Keyboard: <kbd>WASD</kbd> move/drive · <kbd>E</kbd> action / car · <kbd>Space</kbd> or click to shoot · <kbd>R</kbd> reload · <kbd>P</kbd> pause</span>
       <button class="pill" id="snd" type="button">Sound: on</button>
+      <button class="pill" id="diff" type="button">Difficulty: Normal</button><span id="comicsT" style="font-size:12px;color:var(--gold)"></span>
     </div>
   </div>
 </section>
@@ -167,6 +174,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
   </div>
 </section>
 
+<section class="screen result" id="arcade"><div class="rbox" style="width:min(340px,100%)"><h2 style="font-size:44px">ARCADE</h2><canvas id="ac" width="300" height="220" style="width:100%;max-width:300px;touch-action:none;background:#0a0a14;border:1px solid var(--line)"></canvas><p id="ar"></p><div class="row"><button class="btn ghost" id="aclose" type="button">Close</button></div></div></section>
 <div id="touch">
   <button class="tb" id="bPause" type="button" aria-label="Pause">II</button>
   <button class="tb" id="bAct" type="button">ACTION</button>
@@ -630,7 +638,7 @@ function shoot(w,s,ang,spread,dmg,team,life,snd){const a=ang+(Math.random()-.5)*
   w.flashes.push({x:s.x+c*(off+4),y:s.y+sn*(off+4),t:.06,a});
   if(snd===null)return;const P=w.player,d=Math.hypot(s.x-P.x,s.y-P.y);sfx(snd||(team==='p'?'shot':'eshot'),clamp(1-d/(18*T),0,1)*(s===P?1:.7));
   if(team==='p')w.mission.noise&&w.mission.noise(w,s);}
-function hitActor(w,a,dmg,src){if(a.surrender||a.down)return;a.hp-=dmg;a.hurtT=.15;a.lastHurt=w.t;
+function hitActor(w,a,dmg,src){if(a.surrender||a.down)return;if(a===w.player&&progress.hard)dmg*=1.5;if((a.team==='enemy'||a.team==='boss')&&progress.hard)dmg/=1.3;a.hp-=dmg;a.hurtT=.15;a.lastHurt=w.t;
   for(let i=0;i<5;i++)w.parts.push({x:a.x,y:a.y,vx:(Math.random()-.5)*90,vy:(Math.random()-.5)*90,life:.35,max:.35,c:'#7d1d14',s:2.5});
   const P=w.player;
   if(a===P){w.lastHurt=w.t;w.shake=Math.max(w.shake,3);sfx('hit');if(a.hp<=0){a.hp=0;if(w.mi===1&&w.allies.some(x=>!x.hidden&&!x.down&&x.gun)){a.down=true;a.bleed=22;a.moving=false;a.reviving=null;toast(w,'Sony is down! Hold on...');}else fail("YOU'RE DOWN",'Kamath\'s men got the better of Sony. Use cover and let your gang draw fire.');}return;}
@@ -749,6 +757,7 @@ function updatePlayer(w,dt){
 function findPrompt(w){const p=w.player;if(p.car)return {label:'EXIT CAR',car:true};if(p.down)return null;
   for(const a of w.allies)if(a.down&&!a.hidden&&Math.hypot(a.x-p.x,a.y-p.y)<36)return {label:'HELP UP',fn:()=>{p.reviving=a;p.reviveT=0;}};
   let best=null,bd=1e9;for(const it of w.interacts){if(it.on&&!it.on())continue;const d=Math.hypot(it.x-p.x,it.y-p.y);if(d<(it.r||30)&&d<bd){bd=d;best=it;}}if(best)return best;
+  if(!best){for(const a of w.actors){if(a.team!=='civ'||a.down||a.hidden||a.sit)continue;if(Math.hypot(a.x-p.x,a.y-p.y)<22)return {label:'TALK',talk:a};}}
   if(w.allowCars){for(const c of w.cars){if(c.wreck||c.locked)continue;if(inCar(c,p.x,p.y,16)){const d=Math.hypot(c.x-p.x,c.y-p.y);if(d<bd){bd=d;const hire=c.kind==='auto'&&(!c.driver||c.driver==='ai');best={label:hire?'HIRE AUTO':(c.driver?'STEAL CAR':'ENTER CAR'),carObj:c,hire};}}}}
   return best;}
 
@@ -972,7 +981,7 @@ function drawTrain(g,tr,t){
       if(c.kind==='box'){g.fillStyle='#1a0e08';g.fillRect(x0+L/2-14,y-1,28,10);g.fillStyle='rgba(255,190,90,.65)';g.fillRect(x0+L/2-11,y+1,22,6);}}
     g.fillStyle='#222';g.fillRect(x0-6,tr.y-2,6,4);x=x0-6;}}
 function drawPickup(g,p,t){const b=Math.sin(t*4+p.x)*1.5;g.save();g.translate(p.x,p.y+b);g.fillStyle='rgba(0,0,0,.3)';g.fillRect(-6,-3,14,12);
-  if(p.kind==='health'){g.fillStyle='#f4f1ea';g.fillRect(-8,-6,16,12);g.fillStyle='#c62f24';g.fillRect(-2,-4,4,8);g.fillRect(-5,-1,10,2);}else{g.fillStyle='#4f5a32';g.fillRect(-8,-5,16,10);g.fillStyle='#d9b04c';g.fillRect(-5,-2,3,4);g.fillRect(-1,-2,3,4);g.fillRect(3,-2,3,4);}g.restore();}
+  if(p.kind==='comic'){g.fillStyle='#c0392b';g.fillRect(-7,-6,14,11);g.fillStyle='#f6ecd9';g.fillRect(-5,-4,10,7);g.fillStyle='#e7b553';g.fillRect(-5,-4,10,2);}else if(p.kind==='health'){g.fillStyle='#f4f1ea';g.fillRect(-8,-6,16,12);g.fillStyle='#c62f24';g.fillRect(-2,-4,4,8);g.fillRect(-5,-1,10,2);}else{g.fillStyle='#4f5a32';g.fillRect(-8,-5,16,10);g.fillStyle='#d9b04c';g.fillRect(-5,-2,3,4);g.fillRect(-1,-2,3,4);g.fillRect(3,-2,3,4);}g.restore();}
 
 /* ---------- props (street furniture, yard objects) ---------- */
 function drawProp(g,p,t){
@@ -1010,6 +1019,7 @@ function drawProp(g,p,t){
     g.fillStyle='#c9d1d8';g.fillRect(-6,-24,11,48);g.fillStyle='#8a9aa6';g.fillRect(-2,-17,8,4.5);g.fillRect(-2,12.5,8,4.5);
     g.fillStyle='#e8eef2';g.fillRect(-27,-9,9,18);g.fillStyle='#1e3f8a';g.fillRect(-29,-7,6,14);g.fillStyle='#3a4a58';g.fillRect(24,-3,4,6);
     if(p.cargo){g.fillStyle='#8a6a14';g.fillRect(-14,-3,12,6);}g.restore();break;}
+  case 'seat':g.fillStyle='rgba(0,0,0,.2)';g.fillRect(x-6,y-6,13,13);g.fillStyle='#7a1f2b';g.fillRect(x-6,y-6,12,12);g.fillStyle='#9a2f3e';g.fillRect(x-5,y-5,10,4);break;
   case 'lily':g.fillStyle='#3f8a3a';circ(g,x,y,5);g.fillStyle='#f0a0c0';circ(g,x+1,y-1,2);break;
   // ---------- overhead layer ----------
   case 'lamp':{g.fillStyle='rgba(0,0,0,.25)';circ(g,x+3,y+3,3.5);g.strokeStyle='#5d6266';g.lineWidth=2.4;g.lineCap='round';g.beginPath();g.moveTo(x,y);g.lineTo(p.ax,p.ay);g.stroke();
@@ -1073,6 +1083,7 @@ function render(w,dt){
     if(gx<0||gy<0||gx*CH>=m.w||gy*CH>=m.h)continue;ctx.drawImage(chunkCanvas(m,gx,gy),gx*S,gy*S,S+.6,S+.6);}
   const t=w.t;
   // objective ring
+  if(w.job&&w.job.drops[w.job.i]){const d=w.job.drops[w.job.i],r=20+Math.sin(w.t*5)*2;ctx.strokeStyle='rgba(127,198,109,.95)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(d[0],d[1],r,0,7);ctx.stroke();}
   const o=w.obj&&w.obj.tgt&&w.obj.tgt();if(o){const r=22+Math.sin(t*4)*3;ctx.strokeStyle='rgba(231,181,83,.9)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(o.x,o.y,r,0,7);ctx.stroke();ctx.strokeStyle='rgba(231,181,83,.35)';ctx.lineWidth=8;ctx.beginPath();ctx.arc(o.x,o.y,r+6,0,7);ctx.stroke();}
   if(w.mission&&w.mission.drawUnder)w.mission.drawUnder(ctx,w,t);
   for(const p of w.pickups)drawPickup(ctx,p,t);
@@ -1178,6 +1189,7 @@ function drawHUD(w){
   // stick
   const st=input.stick;if(input.touch){if(st.active){ctx.strokeStyle='rgba(246,236,217,.4)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(st.ox,st.oy,52,0,7);ctx.stroke();ctx.fillStyle='rgba(246,236,217,.5)';circ(ctx,st.ox+st.x*52,st.oy+st.y*52,22);}
     else{ctx.strokeStyle='rgba(246,236,217,.18)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(110,SH-110,52,0,7);ctx.stroke();ctx.fillStyle='rgba(246,236,217,.25)';ctx.font='700 11px Inter,sans-serif';ctx.fillText(P.car?'STEER':'MOVE',110,SH-110);}}
+  if(w.cash){ctx.font='800 13px Inter,sans-serif';ctx.fillStyle='#e7b553';ctx.textAlign='left';ctx.textBaseline='bottom';ctx.fillText('Rs '+w.cash,12,SH-12);}
   // hurt vignette
   if(w.t-w.lastHurt<.35){ctx.fillStyle='rgba(180,20,10,'+(0.25*(1-(w.t-w.lastHurt)/.35))+')';ctx.fillRect(0,0,SW,SH);}
 }
@@ -1445,7 +1457,7 @@ const M2={idx:1,title:"2026 · Kamath's Daughter",
     for(const [x,y,a,c] of [[16.3,29.5,Math.PI/2,'#f2f2f2'],[16.3,33,Math.PI/2,'#b8202a'],[16.3,36.5,-Math.PI/2,'#1f2a44']])w.cars.push(makeCar('car',x*T,y*T,a,c));
     w.cars.push(makeCar('suv',71.6*T,12.6*T,Math.PI/2,'#141414'));w.cars.push(makeCar('auto',30.5*T,41.5*T,0,'#f2c230'),makeCar('auto',60.5*T,59.5*T,Math.PI,'#f2c230'),makeCar('auto',80.5*T,77.5*T,0,'#f2c230'));for(const q of m.parked)w.cars.push(makeCar(q.kind,q.x,q.y,q.a,q.c));
     w.pickups.push({x:72*T,y:18.5*T,kind:'health'},{x:95.5*T,y:11.5*T,kind:'health'},{x:96*T,y:18.5*T,kind:'ammo',n:24},{x:72*T,y:11*T,kind:'ammo',n:24},{x:21*T,y:70*T,kind:'ammo',n:24});
-    this.applyCP(w,cp);spawnTraffic(w,30);spawnPeds(w,46);return w;},
+    this.applyCP(w,cp);spawnTraffic(w,30);spawnPeds(w,46);addSideJobs(w);return w;},
   applyCP(w,cp){const p=w.player;w.stage=0;
     if(cp>=1){const c=makeCar('car',21*T,72.5*T,Math.PI/2,'#f2f2f2');w.cars.push(c);p.x=c.x;p.y=c.y;for(const a of w.gang)w.allies.push(a);enterCar(w,c);w.stage=2;}
     if(cp>=2){exitCar(w);const c=w.player.car;const pc=w.cars[w.cars.length-1];p.car=null;p.hidden=false;pc.driver=null;pc.x=79*T;pc.y=26.6*T;pc.angle=pc.da=0;p.x=84.5*T;p.y=26.6*T;p.angle=-Math.PI/2;
@@ -1478,8 +1490,8 @@ const M2={idx:1,title:"2026 · Kamath's Daughter",
     const tx=p.x/T,ty=p.y/T;for(const z of w.map.zones)if(tx>=z.x1&&tx<z.x2&&ty>=z.y1&&ty<z.y2){if(w.zone!==z.n){w.zone=z.n;w.zoneT=3;}break;}
     if(w.zoneT>0)w.zoneT-=dt;
     this.setObj(w);},
-  bossDown(w,k){if(k.surrender)return;k.surrender=true;k.moving=false;for(const g of w.goons.concat(w.study))if(!g.down)g.surrender=true;w.stage=5;w.cp=3;
-    cinematic(w,k,'KAMATH KNEELS',()=>say([['Kamath','Enough... enough.'],['Kamath','Go. Take her. If you ever make her cry, Sony, I will finish this.'],['Sony','Keep your guns, Kamath. We\'re leaving.'],['Shibu','Sirens. Someone called the police.']],()=>{w.noPolice=false;w.wanted=2;w.policeT=2;toast(w,'Wanted level ★★');}));},
+  bossDown(w,k){if(k.surrender)return;k.surrender=true;k.hidden=true;k.moving=false;for(const g of w.goons.concat(w.study))if(!g.down)g.surrender=true;w.stage=5;w.cp=3;
+    say([['Kamath','Enough... enough.'],['Kamath','Take her, then. But this city is mine, Sony. I will see you at the Last Show, Kadavanthra. Friday.'],['Sony','Keep your guns, Kamath. We\'re leaving.'],['Shibu','Sirens. Someone called the police.']],()=>{w.noPolice=false;w.wanted=2;w.policeT=2;toast(w,'Wanted level ★★');});},
   noise(w,s){alertGoons(w,s.x,s.y,14*T);scareCivs(w,s.x,s.y,12*T);
     if(s===w.player&&!w.noPolice){const inC=s.x>68*T&&s.x<100*T&&s.y>8*T&&s.y<22*T;if(!inC&&w.actors.some(a=>a.ai==='civ'&&!a.down&&Math.hypot(a.x-s.x,a.y-s.y)<10*T))addWanted(w,0);}},
   civHurt(w,a){if((w.civCd||0)<w.t){w.civCd=w.t+2;addWanted(w,1);}},
@@ -1747,13 +1759,110 @@ const M4={idx:3,key:'m4',title:'2026 · Airport Run',
   drawUnder(g,w){if(!w.boss||!w.boss.down||w.gold.taken)return;const gx=w.gold.x,gy=w.gold.y;
     for(let i=0;i<4;i++){const bx=gx-14+i*9,by=gy+(i%2?2:-2);g.fillStyle='#8a6a14';g.fillRect(bx-4,by-3,9,6);g.fillStyle='#f2c230';g.fillRect(bx-3,by-2,7,4);g.fillStyle='#fff3b0';g.fillRect(bx-2,by-2,2,1);}},
   onDown(){}};
-const MISSIONS=[M1,M2,M3,M4];
+/* ---------- side jobs, collectibles, arcade, people ---------- */
+const CIV_LINES=['"Machane, the auto stand moved again. Nobody tells us anything."','"Don\'t go near the godown after dark. Kamath\'s boys are counting trucks."','"You look like you need a cup of chaya. The tea stall has a tiffin job."','"My nephew says there are comic books hidden all over this city. Silly boy."','"Ayyo, the metro is so crowded. I walked from Kaloor."','"Kamath is showing a film at Kadavanthra on Friday. Everybody is going."','"Please, no shooting near the fish market. The fish is already nervous."'];
+function addSideJobs(w){
+  const COMICS=[[30,30,'Pandavas #1'],[60,23,'Kochi Night Rider #4'],[18,42,'Metro Ninja #2'],[80,60,'Capes of Kerala'],[47,78,'Backwater Comet #7'],[101,30,'The Lost Chayakkada']];
+  for(const [x,y,n] of COMICS){if((progress.comics||[]).includes(n))continue;w.pickups.push({x:(x+.5)*T,y:(y+.5)*T,kind:'comic',id:n,name:n});}
+  w.interacts.push({x:28.5*T,y:50.5*T,r:34,label:'PLAY ARCADE',fn:()=>arcadeOpen(w)});
+  w.interacts.push({x:20.5*T,y:21.5*T,r:34,label:'TIFFIN JOB',fn:()=>takeTiffin(w)});
+  const drops=[[60.5*T,24.5*T],[80.5*T,60.5*T],[47.5*T,78.5*T]];
+  drops.forEach(([x,y],k)=>w.interacts.push({x,y,r:34,label:'DELIVER TIFFIN',on:()=>!!w.job&&w.job.i===k,fn:()=>deliverTiffin(w,k)}));
+  w.drops=drops;}
+function takeTiffin(w){if(w.job){toast(w,'You still have tiffins to deliver');return;}
+  w.job={i:0,n:3,pay:500,drops:w.drops};sfx('pick');say([['Tea stall uncle','Three tiffin boxes, machane. Hot, hot, hot! Bring them before they get cold. Rs 500 when all three are delivered.']]);}
+function deliverTiffin(w,k){if(!w.job)return;w.job.i++;toast(w,'Tiffin delivered ('+w.job.i+'/'+w.job.n+')');sfx('pick');
+  if(w.job.i>=w.job.n){w.cash=(w.cash||0)+w.job.pay;toast(w,'Rs '+w.job.pay+' paid. Total Rs '+w.cash);w.job=null;}}
+function collectComic(w,pk){if(!progress.comics)progress.comics=[];if(progress.comics.includes(pk.id))return;
+  progress.comics.push(pk.id);saveProgress();toast(w,'Comic found: '+pk.name+' ('+progress.comics.length+'/6)');sfx('pick');}
+function talkTo(w,a){a.angle=Math.atan2(w.player.y-a.y,w.player.x-a.x);say([['',CIV_LINES[(Math.random()*CIV_LINES.length)|0]]]);}
+
+/* ---------- arcade cabinet (brick breaker) ---------- */
+const AC={cv:null,ctx:null,raf:0,run:false,last:0,paid:false};
+const AR={bricks:[],ball:{x:150,y:170,vx:120,vy:-150},padx:125,over:false,won:false,score:0};
+function arcadeReset(){AR.bricks=[];for(let r=0;r<5;r++)for(let c=0;c<8;c++)AR.bricks.push({x:8+c*36,y:22+r*13,w:32,h:9,alive:true,col:['#e2543c','#e7b553','#7fc66d','#6fa8ff','#c77dff'][r]});
+  AR.ball={x:150,y:170,vx:120,vy:-150};AR.padx=125;AR.over=false;AR.won=false;AR.score=0;AC.paid=false;}
+function arcadeOpen(w){if(!AC.cv){AC.cv=$('ac');AC.ctx=AC.cv.getContext('2d');
+    const mv=e=>{const r=AC.cv.getBoundingClientRect();AR.padx=(e.clientX-r.left)/r.width*300-25;};
+    AC.cv.addEventListener('pointermove',mv);AC.cv.addEventListener('pointerdown',mv);$('aclose').onclick=arcadeClose;}
+  G.state='arcade';showScreen('arcade');arcadeReset();AC.run=true;AC.last=performance.now();AC.raf=requestAnimationFrame(arcadeLoop);}
+function arcadeClose(){AC.run=false;cancelAnimationFrame(AC.raf);
+  if(AR.won&&!AC.paid&&W_){AC.paid=true;W_.cash=(W_.cash||0)+200;toast(W_,'Arcade cleared! Rs 200');}
+  G.state='play';showScreen(null);}
+function arcadeLoop(now){if(!AC.run)return;const dt=Math.min(.033,(now-AC.last)/1000);AC.last=now;const b=AR.ball,pw=50,c=AC.ctx;
+  if(!AR.over&&!AR.won){
+    if(keys.KeyA||keys.ArrowLeft)AR.padx-=260*dt;if(keys.KeyD||keys.ArrowRight)AR.padx+=260*dt;AR.padx=clamp(AR.padx,0,300-pw);
+    b.x+=b.vx*dt;b.y+=b.vy*dt;
+    if(b.x<4){b.x=4;b.vx=Math.abs(b.vx);}if(b.x>296){b.x=296;b.vx=-Math.abs(b.vx);}if(b.y<4){b.y=4;b.vy=Math.abs(b.vy);}
+    if(b.y>186&&b.y<196&&b.vy>0&&b.x>AR.padx-4&&b.x<AR.padx+pw+4){b.vy=-Math.abs(b.vy)*1.03;b.vx=clamp((b.x-(AR.padx+pw/2))*4,-220,220);}
+    if(b.y>224)AR.over=true;
+    for(const k of AR.bricks)if(k.alive&&b.x>k.x-3&&b.x<k.x+k.w+3&&b.y>k.y-3&&b.y<k.y+k.h+3){k.alive=false;b.vy=-b.vy;AR.score+=10;break;}
+    if(AR.bricks.every(k=>!k.alive))AR.won=true;}
+  c.fillStyle='#0a0a14';c.fillRect(0,0,300,220);
+  for(const k of AR.bricks)if(k.alive){c.fillStyle=k.col;c.fillRect(k.x,k.y,k.w,k.h);}
+  c.fillStyle='#f6ecd9';c.fillRect(AR.padx,192,pw,6);c.beginPath();c.arc(b.x,b.y,4,0,7);c.fill();
+  c.fillStyle='#e7b553';c.font='700 11px Inter,sans-serif';c.textAlign='left';c.fillText('SCORE '+AR.score,6,14);
+  const msg=AR.won?'CLEARED! Close to collect Rs 200':AR.over?'GAME OVER. Close and try again':'';$('ar').textContent=msg;
+  AC.raf=requestAnimationFrame(arcadeLoop);}
+/* ---------- mission 5: The Last Show (cinema) ---------- */
+function buildCinema(){const W=56,H=44,m=new TileMap(W,H,TL.PAVE);m.treeGround=TL.GRASS;m.palmGround=TL.GRASS;m.doorFloor=TL.FLOOR;m.zones=[];m.parked=[];
+  for(const [x,y] of [[1,1],[52,2],[2,38],[52,40],[26,41],[10,42],[44,41]])m.set(x,y,TL.PALM);
+  m.box(4,4,48,36,TL.WALL);
+  m.rect(5,5,7,8,TL.FLOOR);m.rect(12,5,1,8,TL.WALL);m.rect(13,5,38,8,TL.FLOOR);
+  m.rect(5,13,46,1,TL.WALL);m.set(8,13,TL.DOOR);
+  m.rect(5,14,46,18,TL.FLOOR);
+  m.rect(5,32,46,1,TL.WALL);m.set(26,32,TL.DOOR);m.set(27,32,TL.DOOR);
+  m.rect(5,33,46,6,TL.TILE);m.set(26,39,TL.DOOR);m.set(27,39,TL.DOOR);
+  for(const x of [18,19,20])m.set(x,34,TL.DESK);for(const x of [34,35,36])m.set(x,34,TL.DESK);
+  m.prop({k:'stall',x:16*T,y:36*T,solid:13});m.prop({k:'stall',x:38*T,y:36*T,solid:13});
+  for(let y=16;y<=30;y+=2)for(let x=8;x<=46;x+=2){if(x>=25&&x<=28)continue;m.prop({k:'seat',x:(x+.5)*T,y:(y+.5)*T,R:8});}
+  m.zones=[{x1:5,y1:14,x2:50,y2:32,n:'SCREEN 2 · THE LAST SHOW'},{x1:5,y1:33,x2:50,y2:39,n:'THEATRE LOBBY'},{x1:5,y1:5,x2:12,y2:13,n:'PROJECTION BOOTH'},{x1:0,y1:0,x2:W,y2:H,n:'KADAVANTHRA'}];
+  return m;}
+
+const M5={idx:4,key:'m5',title:'2026 · The Last Show',
+  create(){seed=2029;const m=buildCinema(),w=newWorld(m);w.mi=1;w.cp=0;w.title=this.title;w.mission=this;w.night=false;w.allowCars=false;w.pspeed=132;w.followGap=26;w.noPolice=true;
+    const P=w.player=addActor(w,{team:'player',look:LK.sony,r:9,x:26.5*T,y:36*T,angle:-Math.PI/2,hp:100,maxhp:100});P.gun='pistol';P.mag=12;P.reserve=36;P.stam=100;
+    w.gang=[['Bheeman',LK.bheeman],['Kuttan',LK.kuttan],['Tintu',LK.tintu],['Shibu',LK.shibu]].map(([name,look],i)=>applyRole(addActor(w,{team:'ally',name,look,x:P.x-14+i*9,y:P.y+(i%2?2:-2),angle:-Math.PI/2,gun:true,hp:100,maxhp:100,r:9})));
+    w.allies.push(...w.gang);
+    const hard=progress.hard?1.3:1;
+    for(let i=0;i<6;i++)addActor(w,{team:'enemy',ai:'goon',look:i%2?LK.goon2:LK.goon,x:(12+i*6)*T,y:18*T,angle:Math.PI/2,hp:Math.round(100*hard),maxhp:Math.round(100*hard),gun:true,dmg:7,spread:.17,rate:1.2,sight:9*T,active:false,state:'idle',r:9});
+    for(let i=0;i<14;i++)addActor(w,{team:'civ',ai:null,look:civLook(),x:(9+(i%7)*5)*T,y:(24+Math.floor(i/7)*3)*T,angle:-Math.PI/2,r:8,sit:true});
+    w.boss=addActor(w,{team:'boss',ai:null,look:LK.kamath,x:26.5*T,y:18*T,angle:Math.PI/2,hp:Math.round(520*hard),maxhp:Math.round(520*hard),gun:true,dmg:9,spread:.12,rate:1.3,burst:true,sight:12*T,active:false,state:'idle',r:10,name:'Kamath'});
+    w.stage=0;w.panic=false;w.shotsFired=false;this.setObj(w);return w;},
+  applyCP(){},
+  intro(w){say([['','Kadavanthra. Friday night. The 9 o\'clock show at Screen 2 is sold out.'],['','Kamath is in the front row with his men. He thinks the Pandavas are scattered.'],['Sony','Lights go down, the screen goes white. Nobody leaves that theatre except the innocent ones.'],['Bheeman','Machane, you sound like a film trailer.']],()=>toast(w,'Get into Screen 2'));},
+  setObj(w){const b=w.boss;
+    if(w.stage===0)w.obj={text:"Get into Screen 2. Kamath is in the 9 o'clock show.",tgt:()=>({x:26.5*T,y:31*T})};
+    else if(w.stage===1)w.obj={text:'Find Kamath in the front row',tgt:()=>b};
+    else if(w.stage===2)w.obj={text:'Kill Kamath before the screen goes dark',tgt:()=>b};
+    else if(w.stage===3)w.obj={text:'He is running for the projection booth. Corner him!',tgt:()=>b};
+    else w.obj={text:'Kamath is down.',tgt:null};},
+  update(w,dt){const P=w.player,b=w.boss;
+    if(w.stage===0&&P.y<32*T){w.stage=1;toast(w,'Lights down. Film rolling.');}
+    if(w.stage===1&&(Math.hypot(P.x-b.x,P.y-b.y)<12*T||w.shotsFired)){w.stage=2;b.active=true;b.state='combat';for(const a of w.actors)if(a.team==='enemy'){a.active=true;a.state='combat';}w.panic=true;toast(w,'SHOTS! The audience runs!');sfx('alert');}
+    if(w.stage===2&&!b.down&&b.hp<b.maxhp*.35){w.stage=3;toast(w,'Kamath runs for the booth!');}
+    if((w.stage===2||w.stage===3)&&!b.down){
+      if(w.stage===3)walkPath(w,b,8.5*T,9.5*T,125,dt);
+      b.cool=(b.cool||0)-dt;if(b.cool<=0&&los(w,b.x,b.y,P.x,P.y)&&Math.hypot(P.x-b.x,P.y-b.y)<14*T){shoot(w,b,Math.atan2(P.y-b.y,P.x-b.x),.12,9,'e');b.cool=1.2*(.8+Math.random()*.4);}}
+    if(w.panic)for(const a of w.actors){if(a.team!=='civ'||a.down||a.hidden)continue;if(a.sit&&!a.fled){a.fled=true;}
+      const dx=26.5*T-a.x,dy=38*T-a.y,d=Math.hypot(dx,dy);if(d<1.5*T){a.hidden=true;}else moveActor(w,a,dx/d*110*dt,dy/d*110*dt);}
+    this.setObj(w);},
+  civHurt(w){if((w.civCd||0)<w.t){w.civCd=w.t+2;addWanted(w,1);}},
+  noise(w,s){if(s===w.player)w.shotsFired=true;},
+  bossDown(w,k){if(k.down)return;k.down=true;k.hp=0;k.moving=false;w.stage=4;
+    cinematic(w,{x:k.x,y:k.y},'THE LAST SHOW',()=>complete(w,'Kamath is dead. The show went on, and the Pandavas walked out of Screen 2 into the Kadavanthra night.'));},
+  drawUnder(g,w){const fl=0.7+0.3*Math.sin(w.t*17)*Math.sin(w.t*5);
+    g.fillStyle='rgba(200,230,255,'+(0.28*fl)+')';g.fillRect(14*T,14*T,28*T,16*T);
+    g.fillStyle='rgba(255,255,255,'+(0.55*fl)+')';g.fillRect(14*T,13*T,28*T,T);},
+  onDown(){}};
+const MISSIONS=[M1,M2,M3,M4,M5];
+
 
 const G={state:'menu',mi:0};
 let progress={};try{progress=JSON.parse(localStorage.getItem('pandavas-progress')||'{}')||{};}catch(e){progress={};}
 function saveProgress(){try{localStorage.setItem('pandavas-progress',JSON.stringify(progress));}catch(e){}}
 function showScreen(id){for(const s of document.querySelectorAll('.screen'))s.classList.toggle('on',s.id===id);$('touch').classList.toggle('on',input.touch&&(id==null||id==='dialog')&&G.state!=='menu');}
-function refreshMenu(){$('m1s').innerHTML=progress.m1?'<span class="done">✓ Completed</span> · play again ›':'Play mission 1 ›';$('m2s').innerHTML=progress.m2?'<span class="done">✓ Completed</span> · play again ›':'Play mission 2 ›';$('m4s').innerHTML=progress.m4?'<span class="done">✓ Completed</span> · play again ›':'Play mission 4 ›';$('m3s').innerHTML=progress.m3?'<span class="done">✓ Completed</span> · play again ›':'Play mission 3 ›';$('snd').textContent='Sound: '+(AU.on?'on':'off');}
+function refreshMenu(){$('diff').textContent='Difficulty: '+(progress.hard?'Hard':'Normal');$('comicsT').textContent='Comics '+((progress.comics||[]).length)+'/6';$('m5s').innerHTML=progress.m5?'<span class="done">✓ Completed</span> · play again ›':'Play mission 5 ›';$('m1s').innerHTML=progress.m1?'<span class="done">✓ Completed</span> · play again ›':'Play mission 1 ›';$('m2s').innerHTML=progress.m2?'<span class="done">✓ Completed</span> · play again ›':'Play mission 2 ›';$('m4s').innerHTML=progress.m4?'<span class="done">✓ Completed</span> · play again ›':'Play mission 4 ›';$('m3s').innerHTML=progress.m3?'<span class="done">✓ Completed</span> · play again ›':'Play mission 3 ›';$('snd').textContent='Sound: '+(AU.on?'on':'off');}
 function startMission(i,cp){G.mi=i;const w=MISSIONS[i].create(cp||0);W_=w;w.cam.x=w.player.x;w.cam.y=w.player.y;w.cam.z=baseZoom();computeFlow(w);G.state='play';showScreen(null);
   try{if(input.touch&&document.documentElement.requestFullscreen&&!document.fullscreenElement)document.documentElement.requestFullscreen().then(()=>{try{screen.orientation.lock('landscape').catch(()=>{});}catch(e){}}).catch(()=>{});}catch(e){}
   MISSIONS[i].intro(w);}
@@ -1768,7 +1877,7 @@ function complete(w,text){G.state='done';progress['m'+(G.mi+1)]=1;saveProgress()
 function pauseGame(){G.state='pause';showScreen('pause');if(AU.sg)AU.sg.gain.value=0;}
 function resumeGame(){G.state='play';showScreen(null);}
 function toMenu(){G.state='menu';W_=null;refreshMenu();showScreen('menu');if(AU.sg)AU.sg.gain.value=0;}
-$('m1').onclick=()=>{audioInit();startMission(0,0);};$('m2').onclick=()=>{audioInit();startMission(1,0);};$('m3').onclick=()=>{audioInit();startMission(2,0);};$('m4').onclick=()=>{audioInit();startMission(3,0);};
+$('m1').onclick=()=>{audioInit();startMission(0,0);};$('m2').onclick=()=>{audioInit();startMission(1,0);};$('m3').onclick=()=>{audioInit();startMission(2,0);};$('m4').onclick=()=>{audioInit();startMission(3,0);};$('m5').onclick=()=>{audioInit();startMission(4,0);};$('diff').onclick=()=>{progress.hard=!progress.hard;saveProgress();refreshMenu();};
 $('retry').onclick=()=>startMission(G.mi,W_?W_.cp:0);$('fmenu').onclick=toMenu;$('dmenu').onclick=toMenu;$('pmenu').onclick=toMenu;
 $('next').onclick=()=>startMission(G.mi+1,0);$('resume').onclick=resumeGame;$('prestart').onclick=()=>startMission(G.mi,W_?W_.cp:0);
 const toggleSnd=()=>{AU.on=!AU.on;$('psnd').textContent='Sound: '+(AU.on?'on':'off');refreshMenu();};$('snd').onclick=toggleSnd;$('psnd').onclick=toggleSnd;
@@ -1780,7 +1889,7 @@ function update(w,dt){
   w.t+=dt;w.flowT-=dt;if(w.flowT<=0){computeFlow(w);w.flowT=.3;}
   // interact
   w.prompt=findPrompt(w);
-  if(input.actQ){input.actQ=false;const pr=w.prompt;if(pr){if(pr.car)exitCar(w);else if(pr.carObj){if(pr.hire)hireAuto(w,pr.carObj);else enterCar(w,pr.carObj);}else if(pr.fn)pr.fn();}}
+  if(input.actQ){input.actQ=false;const pr=w.prompt;if(pr){if(pr.car)exitCar(w);else if(pr.carObj){if(pr.hire)hireAuto(w,pr.carObj);else enterCar(w,pr.carObj);}else if(pr.talk)talkTo(w,pr.talk);else if(pr.fn)pr.fn();}}
   if(G.state!=='play')return;
   updatePlayer(w,dt);updateSquad(w,dt);if(G.state!=='play')return;
   for(const a of w.actors){if(a.ai==='guard')aiGuard(w,a,dt);else if(a.ai==='goon')aiGoon(w,a,dt);else if(a.ai==='civ')aiCiv(w,a,dt);if(G.state!=='play')return;}
@@ -1799,7 +1908,7 @@ function update(w,dt){
   for(const f of w.flashes)f.t-=dt;w.flashes=w.flashes.filter(f=>f.t>0);
   for(const p of w.parts){p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt;if(p.smoke)p.s+=dt*6;}w.parts=w.parts.filter(p=>p.life>0);if(w.parts.length>400)w.parts.splice(0,w.parts.length-400);
   // pickups
-  const P=w.player;if(!P.hidden)for(const pk of w.pickups){if(Math.hypot(pk.x-P.x,pk.y-P.y)<20){if(pk.kind==='health'){if(P.hp>=P.maxhp)continue;P.hp=Math.min(P.maxhp,P.hp+50);toast(w,'+ Health');}else if(P.gun==='pistol'){P.reserve+=pk.n;toast(w,'+ Ammo');}else continue;pk.got=true;sfx('pick');}}
+  const P=w.player;if(!P.hidden)for(const pk of w.pickups){if(Math.hypot(pk.x-P.x,pk.y-P.y)<20){if(pk.kind==='comic'){collectComic(w,pk);pk.got=true;continue;}if(pk.kind==='health'){if(P.hp>=P.maxhp)continue;P.hp=Math.min(P.maxhp,P.hp+50);toast(w,'+ Health');}else if(P.gun==='pistol'){P.reserve+=pk.n;toast(w,'+ Ammo');}else continue;pk.got=true;sfx('pick');}}
   w.pickups=w.pickups.filter(p=>!p.got);
   // remove old bodies far away
   if(w.mi===1)w.actors=w.actors.filter(a=>!(a.ai==='civ'&&a.down&&a.downT>20&&Math.hypot(a.x-P.x,a.y-P.y)>14*T));
