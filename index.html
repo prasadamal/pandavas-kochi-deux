@@ -115,6 +115,12 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
         <span class="d">Thirty years later the Pandavas run Mattancherry. Steal a car, pick up the gang, take Meera from her gangster father and escape to Fort Kochi beach.</span>
         <span class="go" id="m2s">Play mission 2 ›</span>
       </button>
+      <button class="mcard" id="m3" type="button">
+        <span class="yr">2026</span>
+        <span class="t">Prabhuji's Gold</span>
+        <span class="d">Kochi Metro, evening rush. The gold is in the last car. Fight across the roof of a moving train, take down Prabhuji, and get off at Ernakulam South.</span>
+        <span class="go" id="m3s">Play mission 3 ›</span>
+      </button>
     </div>
     <div class="rot">Turn your phone sideways for the best view</div>
     <div class="foot">
@@ -395,6 +401,7 @@ const LK={
   meera:{shirt:'#7a1f4a',legs:'#8f2a5a',skin:'#a06a48',hair:'#0f0b09',long:true,jasmine:true,dupatta:'#e2b84a',border:'#e2b84a',scale:.92},
   goon:{shirt:'#1b1b1d',legs:'#e9e4d6',skin:'#7a4e33',hair:'#120d0a',mundu:true,stache:true,scale:1.05},
   goon2:{shirt:'#3a2a20',legs:'#2c3e66',skin:'#8a5a3c',hair:'#120d0a',glasses:'#111',stache:true,scale:1.05},
+  prabhuji:{shirt:'#2b1d3d',legs:'#111111',skin:'#8a5a3c',hair:'#8c8c8c',chain:true,glasses:'#222',stache:true,towel:'#e2b84a',scale:1.16},
   kamath:{shirt:'#f2efe6',legs:'#f2efe6',skin:'#9a6b4b',hair:'#c9c9c9',chain:true,mundu:true,border:'#c9a227',stache:true,towel:'#c9a227',gunType:'revolver',scale:1.18},
 };
 function civLook(){const f=Math.random()<.45,r=Math.random;
@@ -1053,6 +1060,7 @@ function render(w,dt){
   const t=w.t;
   // objective ring
   const o=w.obj&&w.obj.tgt&&w.obj.tgt();if(o){const r=22+Math.sin(t*4)*3;ctx.strokeStyle='rgba(231,181,83,.9)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(o.x,o.y,r,0,7);ctx.stroke();ctx.strokeStyle='rgba(231,181,83,.35)';ctx.lineWidth=8;ctx.beginPath();ctx.arc(o.x,o.y,r+6,0,7);ctx.stroke();}
+  if(w.mission&&w.mission.drawUnder)w.mission.drawUnder(ctx,w,t);
   for(const p of w.pickups)drawPickup(ctx,p,t);
   if(w.train)drawTrain(ctx,w.train,t);
   const vis=[];const inV=(x,y,m2)=>x>vx0-m2&&x<vx1+m2&&y>vy0-m2&&y<vy1+m2;
@@ -1370,6 +1378,7 @@ function buildM2(){
   m.metro={x0:46,x:48*T,ty:0};
   m.nets=[[24,86],[36,86],[62,86],[74,86],[90,86]].map(([x,y])=>({x:x*T,y:y*T}));
   m.boats=[{x:3*T,y:20*T,a:1.5,c:'#2b5d7a',roof:1},{x:2.2*T,y:47*T,a:0,c:'#7a2b2b'},{x:2.2*T,y:50.6*T,a:0,c:'#2b5d7a',roof:1},{x:2.5*T,y:66*T,a:1.4,c:'#2b5d7a',roof:1},{x:40*T,y:89.5*T,a:.1,c:'#1d4e3a'}];
+  for(const [nm,yy] of [['PALARIVATTOM',6],['JLN STADIUM',24],['KALOOR',42],['LISSIE',60],['ERNAKULAM SOUTH',78]])m.labels.push({x:52.4*T,y:(yy+.5)*T,text:nm,font:"800 9px Inter,sans-serif",c:'rgba(255,240,200,.85)'});
   m.labels.push({x:4*T,y:8*T,text:'BACKWATERS',font:"800 11px Inter,sans-serif",c:'rgba(200,225,255,.4)'},{x:52*T,y:84*T,text:'FORT KOCHI BEACH',font:"800 12px Inter,sans-serif",c:'rgba(90,60,30,.55)'});
   m.zones=[{x1:0,y1:80,x2:106,y2:92,n:'FORT KOCHI'},{x1:0,y1:0,x2:14,y2:80,n:'MARINE DRIVE'},{x1:10,y1:58,x2:46,y2:80,n:'MATTANCHERRY'},{x1:44,y1:0,x2:52,y2:80,n:'MG ROAD'},
     {x1:64,y1:0,x2:106,y2:30,n:'PANAMPILLY NAGAR'},{x1:64,y1:30,x2:106,y2:80,n:'KADAVANTHRA'},{x1:0,y1:0,x2:106,y2:92,n:'ERNAKULAM SOUTH'}];
@@ -1616,12 +1625,58 @@ function buildCineScene(w,f){
 /* =====================================================================
    GAME FLOW
    ===================================================================== */
-const MISSIONS=[M1,M2];
+/* =====================================================================
+   MISSION 3 — 2026 · Prabhuji's Gold (fight on the roof of a moving metro)
+   ===================================================================== */
+const M3={idx:2,key:'m3',title:"2026 · Prabhuji's Gold",
+  create(){seed=2027;const m=buildM2(),w=newWorld(m);w.mi=1;w.cp=0;w.title=this.title;w.mission=this;w.night=false;w.tint='rgba(255,140,50,0.07)';w.allowCars=false;w.pspeed=132;w.followGap=26;w.noPolice=true;
+    m.metro=null;m.parked=[];
+    const RX0=46.5*T,RX1=50.1*T,RY0=8*T,RLEN=34*T;
+    w.arena={x0:RX0,x1:RX1,y0:RY0,len:RLEN,v:34,stop:46*T};
+    const P=w.player=addActor(w,{team:'player',look:LK.sony,r:9,x:(RX0+RX1)/2,y:RY0+12*T,angle:Math.PI/2,hp:100,maxhp:100});
+    P.gun='pistol';P.mag=12;P.reserve=48;
+    w.gang=[['Bheeman',LK.bheeman],['Kuttan',LK.kuttan],['Tintu',LK.tintu],['Shibu',LK.shibu]].map(([name,look],i)=>applyRole(addActor(w,{team:'ally',name,look,x:P.x+(i%2?14:-14),y:P.y-14-i*3,angle:Math.PI/2,gun:true,hp:100,maxhp:100,r:9})));
+    w.allies.push(...w.gang);
+    for(let i=0;i<9;i++){const side=i%2;addActor(w,{team:'enemy',ai:'goon',look:side?LK.goon2:LK.goon,x:side?RX1-.9*T:RX0+.9*T,y:RY0+(18+i*1.4)*T,angle:-Math.PI/2,hp:100,maxhp:100,gun:true,dmg:7,spread:.17,rate:1.3,sight:9*T,active:true,state:'combat',r:9});}
+    w.boss=addActor(w,{team:'boss',ai:'goon',look:LK.prabhuji,x:(RX0+RX1)/2,y:RY0+RLEN-5*T,angle:-Math.PI/2,hp:520,maxhp:520,gun:true,dmg:9,spread:.12,rate:1.5,burst:true,sight:12*T,active:true,state:'combat',r:10,name:'Prabhuji'});
+    w.gold={x:(RX0+RX1)/2,y:RY0+RLEN-3*T,taken:false};
+    w.interacts.push({x:w.gold.x,y:w.gold.y,r:44,label:'TAKE THE GOLD',on:()=>w.boss.down&&!w.gold.taken,fn:()=>M3.takeGold(w)});
+    w.stage=0;this.setObj(w);return w;},
+  applyCP(){},
+  intro(w){say([['','Kochi Metro, evening rush. The viaduct runs above MG Road.'],['','Prabhuji has moved the Gulf gold through this train for years. Tonight it is in the last car.'],['Sony','Then we take the roof. All of us.'],['Bheeman','Machane, the roof is ours!']],()=>toast(w,'Clear the roof!'));},
+  setObj(w){const alive=w.actors.filter(a=>a.team==='enemy'&&!a.down).length;
+    if(w.stage===0)w.obj={text:"Clear the roof! Prabhuji's men left: "+alive,tgt:null};
+    else if(w.stage===1)w.obj={text:'Push back to the last car. Prabhuji is there.',tgt:()=>w.boss};
+    else w.obj={text:w.gold.taken?'Get off the train!':'Prabhuji is down. Take the gold from the last car!',tgt:()=>({x:w.gold.x,y:w.gold.y})};},
+  update(w,dt){const A=w.arena;let dy=0;
+    if(A.y0<A.stop){dy=Math.min(A.stop-A.y0,A.v*dt);A.y0+=dy;}
+    if(dy){for(const a of w.actors)if(!a.hidden)a.y+=dy;w.gold.y+=dy;}
+    for(const a of w.actors){if(a.hidden)continue;a.x=clamp(a.x,A.x0+a.r,A.x1-a.r);a.y=clamp(a.y,A.y0+a.r,A.y0+A.len-a.r);}
+    for(const i of w.interacts){i.x=w.gold.x;i.y=w.gold.y;}
+    if(w.stage===0&&!w.actors.some(a=>a.team==='enemy'&&!a.down&&!a.hidden)){w.stage=1;toast(w,'The roof is clear');}
+    this.setObj(w);},
+  bossDown(w,k){if(k.down)return;k.down=true;k.hp=0;k.moving=false;w.stage=2;
+    say([['Prabhuji','Kids on my train. Brave. Stupid.'],['Sony','You have moved the Mercy Home money through this city for years, Prabhuji.'],['Prabhuji','Gold is the only thing that stays, machane. Take it, if you can carry it.']],()=>this.setObj(w));},
+  takeGold(w){if(w.gold.taken)return;w.gold.taken=true;sfx('pick');
+    say([['Sony','Every bar. Back where it belongs.'],['Shibu','Off the train at Ernakulam South before the police arrive!'],['Bheeman','Machane, let\'s go!']],()=>complete(w,'Prabhuji\'s gold is gone, and the Pandavas got off the metro at Ernakulam South.'));},
+  drawUnder(g,w){const A=w.arena,x0=A.x0,x1=A.x1,y0=A.y0,y1=A.y0+A.len,W=x1-x0,H=A.len;
+    g.fillStyle='rgba(0,0,0,.35)';g.fillRect(x0+6,y0+8,W,H);
+    g.fillStyle='#1f4f66';g.fillRect(x0,y0,W,H);
+    g.fillStyle='#d5dee3';g.fillRect(x0+5,y0+5,W-10,H-10);
+    for(let k=1;k<4;k++){const y=y0+H*k/4;g.fillStyle='#8aa0ab';g.fillRect(x0+5,y-2,W-10,4);g.fillStyle='rgba(0,0,0,.3)';g.fillRect(x0+W/2-8,y-1,16,2);}
+    g.fillStyle='rgba(0,0,0,.12)';for(let y=y0+12;y<y1-6;y+=10)g.fillRect(x0+10,y,W-20,3);
+    g.fillStyle='#16384a';g.fillRect(x0,y0+6,3,H-12);g.fillRect(x1-3,y0+6,3,H-12);
+    g.fillStyle='#16a3a0';g.fillRect(x0,y0,W,5);g.fillRect(x0,y1-5,W,5);
+    g.fillStyle='rgba(255,255,255,.35)';g.fillRect(x0+W*.5-1,y0+10,2,H-20);
+    if(!w.gold.taken)for(let i=0;i<4;i++){const gx=w.gold.x-14+i*9,gy=w.gold.y+(i%2?2:-2);g.fillStyle='#8a6a14';g.fillRect(gx-4,gy-3,9,6);g.fillStyle='#f2c230';g.fillRect(gx-3,gy-2,7,4);g.fillStyle='#fff3b0';g.fillRect(gx-2,gy-2,2,1);}
+  },
+  onDown(){}};
+const MISSIONS=[M1,M2,M3];
 const G={state:'menu',mi:0};
 let progress={};try{progress=JSON.parse(localStorage.getItem('pandavas-progress')||'{}')||{};}catch(e){progress={};}
 function saveProgress(){try{localStorage.setItem('pandavas-progress',JSON.stringify(progress));}catch(e){}}
 function showScreen(id){for(const s of document.querySelectorAll('.screen'))s.classList.toggle('on',s.id===id);$('touch').classList.toggle('on',input.touch&&(id==null||id==='dialog')&&G.state!=='menu');}
-function refreshMenu(){$('m1s').innerHTML=progress.m1?'<span class="done">✓ Completed</span> · play again ›':'Play mission 1 ›';$('m2s').innerHTML=progress.m2?'<span class="done">✓ Completed</span> · play again ›':'Play mission 2 ›';$('snd').textContent='Sound: '+(AU.on?'on':'off');}
+function refreshMenu(){$('m1s').innerHTML=progress.m1?'<span class="done">✓ Completed</span> · play again ›':'Play mission 1 ›';$('m2s').innerHTML=progress.m2?'<span class="done">✓ Completed</span> · play again ›':'Play mission 2 ›';$('m3s').innerHTML=progress.m3?'<span class="done">✓ Completed</span> · play again ›':'Play mission 3 ›';$('snd').textContent='Sound: '+(AU.on?'on':'off');}
 function startMission(i,cp){G.mi=i;const w=MISSIONS[i].create(cp||0);W_=w;w.cam.x=w.player.x;w.cam.y=w.player.y;w.cam.z=baseZoom();computeFlow(w);G.state='play';showScreen(null);
   try{if(input.touch&&document.documentElement.requestFullscreen&&!document.fullscreenElement)document.documentElement.requestFullscreen().then(()=>{try{screen.orientation.lock('landscape').catch(()=>{});}catch(e){}}).catch(()=>{});}catch(e){}
   MISSIONS[i].intro(w);}
@@ -1632,11 +1687,11 @@ function renderDialog(){const [who,txt]=G.dialog.lines[G.dialog.i];$('dwho').tex
 function advanceDialog(){const d=G.dialog;if(!d)return;d.i++;if(d.i>=d.lines.length){G.dialog=null;G.state='play';showScreen(null);input.actQ=false;d.done&&d.done();}else renderDialog();}
 $('dialog').addEventListener('pointerdown',e=>{e.preventDefault();advanceDialog();});
 function fail(title,reason){if(G.state==='fail')return;G.state='fail';$('ft').textContent=title;$('fr').textContent=reason;showScreen('fail');if(AU.sg)AU.sg.gain.value=0;}
-function complete(w,text){G.state='done';progress['m'+(w.mi+1)]=1;saveProgress();$('dr').textContent=text;$('next').hidden=w.mi>=MISSIONS.length-1;showScreen('done');if(AU.sg)AU.sg.gain.value=0;}
+function complete(w,text){G.state='done';progress['m'+(G.mi+1)]=1;saveProgress();$('dr').textContent=text;$('next').hidden=G.mi>=MISSIONS.length-1;showScreen('done');if(AU.sg)AU.sg.gain.value=0;}
 function pauseGame(){G.state='pause';showScreen('pause');if(AU.sg)AU.sg.gain.value=0;}
 function resumeGame(){G.state='play';showScreen(null);}
 function toMenu(){G.state='menu';W_=null;refreshMenu();showScreen('menu');if(AU.sg)AU.sg.gain.value=0;}
-$('m1').onclick=()=>{audioInit();startMission(0,0);};$('m2').onclick=()=>{audioInit();startMission(1,0);};
+$('m1').onclick=()=>{audioInit();startMission(0,0);};$('m2').onclick=()=>{audioInit();startMission(1,0);};$('m3').onclick=()=>{audioInit();startMission(2,0);};
 $('retry').onclick=()=>startMission(G.mi,W_?W_.cp:0);$('fmenu').onclick=toMenu;$('dmenu').onclick=toMenu;$('pmenu').onclick=toMenu;
 $('next').onclick=()=>startMission(G.mi+1,0);$('resume').onclick=resumeGame;$('prestart').onclick=()=>startMission(G.mi,W_?W_.cp:0);
 const toggleSnd=()=>{AU.on=!AU.on;$('psnd').textContent='Sound: '+(AU.on?'on':'off');refreshMenu();};$('snd').onclick=toggleSnd;$('psnd').onclick=toggleSnd;
