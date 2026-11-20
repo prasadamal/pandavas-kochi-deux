@@ -2,6 +2,19 @@
 
 A small top-down crime game set in Kochi, Kerala. It runs in the browser as a single HTML file.
 
+## Story mode
+
+Pick a crew on the title screen. Progress saves, and **Continue** resumes where you stopped.
+
+| Campaign | You play | Hunted by |
+|---|---|---|
+| The Pandavas | Sony, Danny, Xavi, Mammu, Pappan | Ayyappan's crew |
+| Ayyappan's crew | Ayyappan, Fakeer, Benny, Geevarghese, Tony | Sony and the Pandavas |
+
+Both stories include an armed standoff that turns into a shared meal, and both end the same way: nobody walks out, and every fall is a slow-motion 3D shot, followed by a comic afterlife epilogue. The earlier missions are still available under **Extra missions**.
+
+New controls: **G** grenade, **Q** medkit, **T** torch, **H** horn, **Shift** sprint.
+
 ## Missions
 
 1. **1996 · Escape from Mercy Home** (Fort Kochi, night). Young Sony wakes the other four kids, steals the warden's revolver, gets past the gate guard and runs through the forest to the goods train.
