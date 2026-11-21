@@ -1,0 +1,19 @@
+{
+  "name": "pandavas-kochi-deux",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pandavas of Kochi - Android wrapper",
+  "scripts": {
+    "web": "node scripts/sync-web.js",
+    "sync": "node scripts/sync-web.js && cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/app": "^6.0.1",
+    "@capacitor/core": "^6.1.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2",
+    "three": "0.128.0"
+  }
+}

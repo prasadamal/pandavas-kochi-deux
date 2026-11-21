@@ -53,3 +53,18 @@ Open `index.html` in a browser. On a phone, hold it sideways and use the on-scre
 | P             | Pause            |
 
 The 3D moments load three.js from cdnjs. Without network access the game still runs and skips them.
+
+## Android APK
+
+The game is wrapped with [Capacitor](https://capacitorjs.com). `index.html` stays the single source of truth; `npm run sync` copies it to `www/` and swaps the CDN three.js for the bundled copy so the app works offline.
+
+**Get an APK without installing anything:** push to GitHub, open the **Actions** tab, open the latest *Build Android APK* run and download the `pandavas-kochi-debug-apk` artifact. Unzip it and install `app-debug.apk` on your phone (allow "install unknown apps").
+
+**Build locally** (Node 20+, JDK 17, Android SDK):
+```
+npm install
+npm run sync
+cd android && ./gradlew assembleDebug
+# -> android/app/build/outputs/apk/debug/app-debug.apk
+```
+The app is locked to landscape, runs full screen, keeps the screen on, and the Android back button pauses the game.

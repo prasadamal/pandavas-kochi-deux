@@ -424,6 +424,7 @@ bFire.addEventListener('pointerdown',e=>{e.preventDefault();audioInit();input.fi
 ['pointerup','pointercancel','pointerleave'].forEach(ev=>bFire.addEventListener(ev,()=>input.fireHeld=false));
 bAct.addEventListener('pointerdown',e=>{e.preventDefault();audioInit();input.actQ=true;});
 $('bPause').addEventListener('click',()=>{if(G.state==='play')pauseGame();});
+try{const CAP=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App;if(CAP)CAP.addListener('backButton',()=>{if(G.state==='play')pauseGame();});}catch(e){}
 function setTouch(v){input.touch=v;$('touch').classList.toggle('on',v&&G.state==='play');}
 addEventListener('touchstart',()=>{if(!input.touch)setTouch(true);},{passive:true});
 

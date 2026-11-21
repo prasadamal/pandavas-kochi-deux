@@ -1,0 +1,7 @@
+{
+  "appId": "com.pandavas.kochi",
+  "appName": "Pandavas of Kochi",
+  "webDir": "www",
+  "backgroundColor": "#0b0806",
+  "android": { "allowMixedContent": false }
+}
