@@ -13,6 +13,8 @@ Pick a crew on the title screen. Progress saves, and **Continue** resumes where 
 
 Both stories include an armed standoff that turns into a shared meal, and both end the same way: nobody walks out, and every fall is a slow-motion 3D shot, followed by a comic afterlife epilogue. The earlier missions are still available under **Extra missions**.
 
+New in the polish pass: a procedural soundtrack (tanpura drone, chenda and tabla rhythm, plucked melody that gets faster in fights), monsoon rain with lightning and thunder in the city, floating damage numbers, blood, kill combos that pay cash, and on-screen buttons for sprint, grenade, medkit and torch.
+
 New controls: **G** grenade, **Q** medkit, **T** torch, **H** horn, **Shift** sprint.
 
 ## Missions
