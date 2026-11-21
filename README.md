@@ -68,3 +68,13 @@ cd android && ./gradlew assembleDebug
 # -> android/app/build/outputs/apk/debug/app-debug.apk
 ```
 The app is locked to landscape, runs full screen, keeps the screen on, and the Android back button pauses the game.
+
+## Latest additions
+
+- **Dr. Driving-style handling:** eased steering wheel, speed-sensitive lock, automatic gears, brake lights, dash with speedo / rpm / gear.
+- **5-star police:** rubber-banded cruisers, evade meter (break line of sight or hide in bushes), roadblocks and spike strips, a police helicopter at 4 stars that fires at 5.
+- **Bullet time:** X or the SLOW button; the meter refills with kills.
+- **Helicopter + parachute:** fly the helipad chopper on Fort Kochi beach (miniguns and rockets), land on the pad or bail out and glide down.
+- **3D view:** V cycles 2D / 3D CAR / 3D ALL.
+- **The Reunion campaign:** Danny's police-station breakout, Xavi's revenge on Bilal (helicopter finale), the House on the Backwater, and Pappan's cinema resignation.
+- **Kochi landmarks:** Edapally junction and Lulu Mall, JLN Stadium (Kaloor), Edapally police station.

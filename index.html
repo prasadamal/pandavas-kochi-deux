@@ -112,6 +112,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
     </div>
     <div class="stories">
       <div class="scard"><div class="t">THE PANDAVAS</div><div class="d">Play Sony and the Orphanage Mafia: five boys who escaped a children's home and grew into one of Kochi's most dangerous crews. Hunted by Ayyappan and his friends.</div><div class="srow"><button class="btn" id="aNew" type="button">New story</button><button class="btn ghost" id="aCont" type="button">Continue</button></div></div>
+      <div class="scard"><div class="t">THE REUNION</div><div class="d">Twenty years after Mercy Home the five have scattered. Sony tracks them down: Danny in a police cell, Xavi hunting Bilal, Pappan trapped as Kamath's bodyguard. Helicopters, parachutes, five stars.</div><div class="srow"><button class="btn" id="cNew" type="button">New story</button><button class="btn ghost" id="cCont" type="button">Continue</button></div></div>
       <div class="scard"><div class="t">AYYAPPAN'S CREW</div><div class="d">Play Ayyappan and four childhood friends who promised a dying friend they would look after his family. Hunted by Sony and the Pandavas.</div><div class="srow"><button class="btn" id="bNew" type="button">New story</button><button class="btn ghost" id="bCont" type="button">Continue</button></div></div>
     </div>
     <div class="missions" id="extras" hidden>
@@ -434,6 +435,9 @@ function moveVec(){let x=0,y=0;if(keys.KeyW||keys.ArrowUp)y-=1;if(keys.KeyS||key
    LOOKS
    ===================================================================== */
 const LK={
+  bilal:{shirt:'#17181d',trim:'#c9a24a',legs:'#1c1c22',skin:'#8a5a3c',hair:'#16110d',glasses:'#101010',stache:true,gunType:'pistol',scale:1.08},
+  cop:{shirt:'#b3a176',legs:'#5d5036',skin:'#7d5638',hair:'#1a1410',cap:'#2b2b2b',stache:true,scale:1},
+
   sonyKid:{shirt:'#b8352a',legs:'#c9b48a',skin:'#8a5a3c',hair:'#1a1410',scale:.78},
   bheemanKid:{shirt:'#2f6aa0',legs:'#d8cfb8',skin:'#7a4e33',hair:'#16110d',scale:.9},
   kuttanKid:{shirt:'#d9a93d',legs:'#5a4a3a',skin:'#91603f',hair:'#1b1511',scale:.76},
@@ -1169,7 +1173,7 @@ function render(w,dt){
   if(w.mission&&w.mission.drawUnder)w.mission.drawUnder(ctx,w,t);
   for(const p of w.pickups)drawPickup(ctx,p,t);
   if(w.heli)drawHeli2D(ctx,w.heli,t,false);
-  if(w.pheli)drawHeli2D(ctx,w.pheli,t,true);
+  if(w.pheli)drawHeli2D(ctx,w.pheli,t,!!w.pheli.pol);
   if(w.player.chute)drawChute2D(ctx,w.player,t);
   if(w.spikes)for(const sp of w.spikes){ctx.save();ctx.translate(sp.x,sp.y);ctx.rotate(sp.a+Math.PI/2);ctx.fillStyle='#222';ctx.fillRect(-20,-2,40,4);ctx.fillStyle='#c9ccd2';for(let i=-18;i<=18;i+=6){ctx.beginPath();ctx.moveTo(i-2,-2);ctx.lineTo(i,-6);ctx.lineTo(i+2,-2);ctx.fill();}ctx.restore();}
   if(w.train)drawTrain(ctx,w.train,t);
@@ -1303,11 +1307,11 @@ function updateHelis(w,dt){
   if(w.wanted>=4&&!w.noPolice&&!w.pheli&&!(w.pheliCool>0)){const an=Math.random()*6.283;w.pheli={x:P.x+Math.cos(an)*22*T,y:P.y+Math.sin(an)*22*T,z:75,a:0,vx:0,vy:0,hp:240,maxhp:240,rot:0,fireT:2.5,pol:true};toast(w,'Police helicopter on you!');sfx('slow');}
   if(w.pheliCool>0)w.pheliCool-=dt;
   const q=w.pheli;if(!q)return;q.rot+=dt*28;
-  if(q.dead){q.z-=55*dt;q.x+=q.vx*dt;q.y+=q.vy*dt;q.a+=dt*5;if(q.z<=0){explode(w,q.x,q.y);toast(w,'Police chopper down!');w.pheli=null;w.pheliCool=70;addWanted(w,1);}return;}
-  if(w.wanted<4||w.noPolice){q.z+=18*dt;q.y-=110*dt;if(Math.hypot(q.x-P.x,q.y-P.y)>45*T)w.pheli=null;return;}
-  const d=Math.hypot(P.x-q.x,P.y-q.y),sp=clamp((d-2.5*T)*1.3,0,w.wanted>=5?200:170),an=Math.atan2(P.y-q.y,P.x-q.x);
+  if(q.dead){q.z-=55*dt;q.x+=q.vx*dt;q.y+=q.vy*dt;q.a+=dt*5;if(q.z<=0){explode(w,q.x,q.y);if(!q.boss){toast(w,'Police chopper down!');w.pheliCool=70;addWanted(w,1);}w.pheli=null;}return;}
+  if(!q.boss&&(w.wanted<4||w.noPolice)){q.z+=18*dt;q.y-=110*dt;if(Math.hypot(q.x-P.x,q.y-P.y)>45*T)w.pheli=null;return;}
+  const d=Math.hypot(P.x-q.x,P.y-q.y),sp=clamp((d-2.5*T)*1.3,0,q.boss?190:w.wanted>=5?200:170),an=Math.atan2(P.y-q.y,P.x-q.x);
   q.vx=moveToward(q.vx,Math.cos(an)*sp,200*dt);q.vy=moveToward(q.vy,Math.sin(an)*sp,200*dt);q.x+=q.vx*dt;q.y+=q.vy*dt;q.a=turnTo(q.a,an,dt*2.5);
-  q.fireT-=dt;if(w.wanted>=5&&q.fireT<=0&&d<13*T&&!w.inBush){q.fireT=2.2;for(let i=0;i<3;i++){const aa=an+(Math.random()-.5)*.22,c=Math.cos(aa),s=Math.sin(aa);w.bullets.push({x:q.x,y:q.y,px:q.x,py:q.y,vx:c*700,vy:s*700,life:.9,team:'e',dmg:8,src:q,air:true});}sfx('shot',.6);}}
+  q.fireT-=dt;if((w.wanted>=5||q.boss)&&q.fireT<=0&&d<13*T&&!w.inBush){q.fireT=q.boss?1.7:2.2;for(let i=0;i<3;i++){const aa=an+(Math.random()-.5)*.22,c=Math.cos(aa),s=Math.sin(aa);w.bullets.push({x:q.x,y:q.y,px:q.x,py:q.y,vx:c*700,vy:s*700,life:.9,team:'e',dmg:q.boss?10:8,src:q,air:true});}sfx('shot',.6);}}
 function drawHeli2D(g,h,t,police){const gz=h.z||0;
   g.save();g.translate(h.x+gz*.14,h.y+gz*.2);g.rotate(h.a);g.fillStyle='rgba(0,0,0,.28)';g.beginPath();g.ellipse(0,0,19,7,0,0,7);g.fill();g.fillRect(-36,-1,22,2);g.restore();
   g.save();g.translate(h.x,h.y-gz*.12);g.rotate(h.a);
@@ -1584,6 +1588,20 @@ function bLulu(m,ix,iy){m.rect(ix,iy,12,12,TL.PAVE);
 function bStadium(m,ix,iy){m.rect(ix,iy,12,12,TL.LAWN);
   for(const [x,y,w,h] of [[0,0,12,2],[0,10,12,2],[0,2,2,8],[10,2,2,8]]){m.rect(ix+x,iy+y,w,h,TL.BLD);m.roofs.push({x:ix+x,y:iy+y,w,h,H:22,style:'flat',roof:'#c9d0d4',wall:'#aeb8be',sign:x===0&&y===0?'JLN STADIUM':undefined,signBg:'#16a3a0',signFg:'#fff'});}
   m.rect(ix+3,iy+3,6,6,TL.FIELD);m.labels.push({x:(ix+6)*T,y:(iy+6)*T,text:'KALOOR',font:"800 10px Inter,sans-serif",c:'rgba(255,255,255,.55)'});}
+/* =====================================================================
+   CAMPAIGN C · THE REUNION — twenty years after the orphanage the five
+   have scattered. Sony tracks them down one by one.
+   ===================================================================== */
+function bStation(m,ix,iy){m.rect(ix,iy,12,12,TL.PAVE);m.box(ix+1,iy+1,10,8,TL.WALL);m.rect(ix+2,iy+2,8,6,TL.FLOOR);
+  m.rect(ix+4,iy+2,1,4,TL.WALL);m.set(ix+4,iy+4,TL.DOOR);m.set(ix+2,iy+2,TL.BED);m.set(ix+2,iy+5,TL.BED);m.rect(ix+7,iy+2,2,1,TL.DESK);m.rect(ix+6,iy+6,3,1,TL.DESK);
+  m.set(ix+5,iy+8,TL.DOOR);m.set(ix+6,iy+8,TL.DOOR);for(const [x,y] of [[ix+1,iy+10],[ix+10,iy+10]])m.set(x,y,TL.PALM);
+  m.prop({k:'arch',layer:'o',x:(ix+6)*T,y:(iy+9.4)*T,w:3.4*T,text:'POLICE STATION',R:70});
+  m.parked.push({kind:'police',x:(ix+3)*T,y:(iy+10.6)*T,a:0,c:'#f2f2f2'},{kind:'police',x:(ix+9)*T,y:(iy+10.6)*T,a:Math.PI,c:'#f2f2f2'});
+  m.labels.push({x:(ix+6)*T,y:(iy+11.7)*T,text:'EDAPALLY POLICE STATION',font:"800 8px Inter,sans-serif",c:'rgba(255,255,255,.65)'});}
+function bXavi(m,ix,iy){m.rect(ix,iy,12,12,TL.LAWN);m.box(ix+2,iy+2,8,6,TL.WALL);m.rect(ix+3,iy+3,6,4,TL.TILE);m.set(ix+5,iy+8,TL.DOOR);m.set(ix+6,iy+8,TL.DOOR);
+  m.set(ix+3,iy+3,TL.BED);m.rect(ix+7,iy+3,2,1,TL.DESK);m.prop({k:'tulasi',x:(ix+5.5)*T,y:(iy+9.6)*T,solid:9});
+  for(const [x,y] of [[ix+1,iy+1],[ix+10,iy+1],[ix+1,iy+10],[ix+10,iy+10]])m.set(x,y,TL.PALM);m.prop({k:'cycle',x:(ix+10.2)*T,y:(iy+6)*T,a:Math.PI/2,c:'#2e4a8a'});
+  m.labels.push({x:(ix+6)*T,y:(iy+11.4)*T,text:'XAVI\'S HOUSE',font:"800 8px Inter,sans-serif",c:'rgba(255,255,255,.6)'});}
 function buildM2(){
   const W=106,H=92,m=new TileMap(W,H,TL.GRASS);m.treeGround=TL.GRASS;m.palmGround=TL.GRASS;m.doorFloor=TL.TILE;m.shadows=true;m.parked=[];
   m.rect(0,0,8,81,TL.WATER);m.rect(8,0,2,81,TL.WALK);
@@ -1593,7 +1611,7 @@ function buildM2(){
   for(let y=0;y<H;y++)for(let x=0;x<W;x++){const v=m.get(x,y);if(v===TL.ROAD||v===TL.WATER)continue;let near=false;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)if(m.get(x+dx,y+dy)===TL.ROAD)near=true;if(near)m.set(x,y,TL.WALK);}
   m.rect(0,81,W,6,TL.SAND);m.rect(0,87,W,5,TL.SEA);for(let x=0;x<8;x++)m.set(x,80,TL.SAND);
   for(let y=0;y<4;y++)for(let x=10;x<W;x++)if(m.get(x,y)===TL.GRASS&&rnd()<.25)m.set(x,y,rnd()<.5?TL.PALM:TL.TREE);
-  const plan={'2,2':bLulu,'3,1':bStadium,'1,0':bTemple,'4,2':bChurch,'1,3':bMosque,'2,3':bMarket,'3,3':bPump,'1,2':bPark},fill=[bHouses,bShops,bApt,bHouses,bShops,bHouses,bApt,bShops,bHouses];let fi=0;
+  const plan={'1,1':bStation,'3,2':bXavi,'2,2':bLulu,'3,1':bStadium,'1,0':bTemple,'4,2':bChurch,'1,3':bMosque,'2,3':bMarket,'3,3':bPump,'1,2':bPark},fill=[bHouses,bShops,bApt,bHouses,bShops,bHouses,bApt,bShops,bHouses];let fi=0;
   for(let by=0;by<4;by++)for(let bx=0;bx<5;bx++){const ix=15+18*bx,iy=9+18*by;
     if(by===0&&(bx===3||bx===4))continue;
     if(bx===0&&by===1){m.rect(ix,iy,12,12,TL.PAVE);m.rect(ix+5,iy+1,7,10,TL.BLD);m.roofs.push({x:ix+5,y:iy+1,w:7,h:10,H:36,style:'glass',roof:'#46636f',wall:'#cfd8dc',sign:'MARINE MALL',signBg:'#1e3f8a',signFg:'#fff'});
@@ -2486,6 +2504,8 @@ Object.assign(ROLES,{
 const CAST={
   A:{hero:{name:'Sony',look:LK.sony},mates:[['Danny',LK.bheeman],['Xavi',LK.kuttan],['Mammu',LK.tintu],['Pappan',LK.shibu]],
      foe:{boss:{name:'Ayyappan',look:LK.ayyappan},elite:[['Fakeer',LK.fakeer],['Benny',LK.benny],['Geevarghese',LK.geev],['Tony',LK.tony]]}},
+  C:{hero:{name:'Sony',look:LK.sony},mates:[['Danny',LK.bheeman],['Xavi',LK.kuttan],['Mammu',LK.tintu],['Pappan',LK.shibu]],
+     foe:{boss:{name:'Bilal',look:LK.bilal},elite:[['Kamath',LK.kamath]]}},
   B:{hero:{name:'Ayyappan',look:LK.ayyappan},mates:[['Fakeer',LK.fakeer],['Benny',LK.benny],['Geevarghese',LK.geev],['Tony',LK.tony]],
      foe:{boss:{name:'Sony',look:LK.sony},elite:[['Danny',LK.bheeman],['Xavi',LK.kuttan],['Mammu',LK.tintu],['Pappan',LK.shibu]]}}};
 const GOONS=(pts)=>pts.map(([x,y])=>({x,y}));
@@ -2535,10 +2555,16 @@ function makeChapter(def){return {idx:def.idx,key:def.key,title:def.title,
     else if(s.t==='death'){const a=w.allies.find(x=>x.name===s.who);if(a){a.hp=0;a.down=true;a.dead=true;a.moving=false;deathCinematic(w,a,()=>{a.hidden=true;w.allies=w.allies.filter(x=>x!==a);this.next(w);});}else this.next(w);}
     else if(s.t==='montage'){w.finale=true;w.montage=true;const order=[...w.actors.filter(a=>(a.team==='enemy'||a.team==='boss')&&a.stylish&&!a.down&&!a.hidden),...w.allies.filter(a=>!a.dead&&!a.hidden),w.player];
       for(const a of order){if(a.dead)continue;a.dead=true;a.hp=0;a.down=true;a.moving=false;w.deathQ.push(a);}}
+    else if(s.t==='join'){for(const nm of s.who){let a=w.actors.find(x=>x.name===nm&&x.team==='vip');const mate=w.C.mates.find(q=>q[0]===nm);
+        if(a){a.team='ally';a.gun=true;a.hp=a.maxhp=100;applyRole(a);}else if(mate){a=applyRole(addActor(w,{team:'ally',name:nm,look:mate[1],x:w.player.x-18,y:w.player.y+14,angle:0,gun:true,hp:100,maxhp:100,r:9}));}
+        if(a&&!w.allies.includes(a)){w.allies.push(a);if(!w.gang)w.gang=[];w.gang.push(a);}toast(w,nm+' joins you');sfx('pick');}this.next(w);}
+    else if(s.t==='evade'){w.noPolice=false;w.wanted=s.n;w.policeT=0;w.wantedCool=0;w.pursuitT=0;toast(w,'Wanted level '+'★'.repeat(s.n));sfx('alert');}
+    else if(s.t==='chopper'){const q=w.pheli={x:s.x*T,y:s.y*T,z:80,a:0,vx:0,vy:0,hp:s.hp||620,maxhp:s.hp||620,rot:0,fireT:2.5,pol:false,boss:true};w.noPolice=true;toast(w,'Bilal is up in a chopper! Shoot it down');sfx('slow');}
     else if(s.t==='end'){complete(w,s.text,s.title||'THE END');}
     this.setObj(w);},
   setObj(w){const s=w.stages[w.stIdx];if(!s||!s.text)return;let tgt=null;
     if(s.t==='reach')tgt=()=>({x:s.x*T,y:s.y*T});
+    else if(s.t==='chopper')tgt=()=>w.pheli?{x:w.pheli.x,y:w.pheli.y}:null;
     else if(s.t==='fight'||s.t==='wave'||s.t==='laststand'||s.t==='standoff'){const tag=s.tagName||w.stIdx;tgt=()=>w.actors.find(a=>(a.team==='enemy'||a.team==='boss')&&a.stageTag===tag&&!a.down&&!a.hidden)||null;}
     if(!w.obj||w.obj.text!==s.text)w.obj={text:s.text,tgt};},
   update(w,dt){const s=w.stages[w.stIdx];if(!s)return;const P=w.player;w.stT+=dt;
@@ -2556,6 +2582,8 @@ function makeChapter(def){return {idx:def.idx,key:def.key,title:def.title,
       if(w.escalated){for(const a of w.actors)if(a.stageTag===tag&&a.flee&&!a.down&&!a.hidden&&a.hp<a.maxhp*.35){a.down=true;a.hidden=true;toast(w,(a.name||'A gunman')+' retreats');}
         if(foesLeft(w,tag)===0&&!w.deathQ.length)this.next(w);}
       else if(w.stT>=s.sec)this.next(w);}
+    else if(s.t==='evade'){if(w.wanted===0&&w.stT>2)this.next(w);}
+    else if(s.t==='chopper'){if(w.pheli){s.lx=w.pheli.x;s.ly=w.pheli.y;}else if(!s.done){s.done=true;const a=addActor(w,{team:'boss',name:'Bilal',look:LK.bilal,x:s.lx||P.x,y:s.ly||P.y,hp:0,maxhp:100,down:true,dead:true,stylish:true,active:true});deathCinematic(w,a,()=>{a.hidden=true;this.next(w);});}}
     else if(s.t==='montage'){if(!w.deathQ.length&&w.stT>1.5&&G.state==='play')this.next(w);}
     this.setObj(w);},
   noise(w,s){if(s===w.player)w.shotsFired=true;alertGoons(w,s.x,s.y,12*T);},
@@ -2652,7 +2680,46 @@ const CH_B_FINAL=makeChapter({idx:12,key:'cbfin',title:'Final · Neethu\'s Excha
   {t:'say',lines:afterlifeLines},
   {t:'end',title:'THE END',text:'Neethu got away with the money. The friends kept their promise, and nobody else walked off that dock.'}]});
 
-const STORY={A:[0,7,8,2,3,9],B:[10,11,8,12]};
+
+const COPS_IN=[[39,31],[41,32],[40,30],[41,34]],COPS_OUT=[[37,37.5],[41,37.8],[35,38.5]];
+const CH_C2=makeChapter({idx:13,key:'cc2',title:'Chapter 2 · Custody',map:CITY,start:[8.9,31],mates:0,cars:true,police:true,dayClock:true,clock:17*60,
+  setup:w=>{citySetup(w);w.cellDanny=addActor(w,{team:'vip',name:'Danny',look:LK.bheeman,x:35.6*T,y:31.2*T,angle:0,r:9});},
+  stages:C=>[
+  {t:'say',lines:[['','Kochi, 2026. Twenty years since the night they ran from Mercy Home. The five of them scattered, and nobody kept in touch. Sony learned why when his phone rang.'],['Constable (whispering)','Is this Sony? A man called Danny says you owe him a parotta. He is in the lock-up at Edapally. He says do not bring flowers.'],['Sony','Twenty years. Not one phone call. And the first call is from a police station.'],['Sony','Get a car, or hire an auto. Edapally is on the metro line, near Lulu Mall.']]},
+  {t:'reach',x:38.5,y:38.2,r:3.2,text:'Get to Edapally police station. Get a car or hire an auto'},
+  {t:'say',lines:[['Head Constable','Visiting hours are over. Also the visiting day. Also the visitors.'],['Sony','I am not visiting. I am collecting.'],['Head Constable','Collecting what?'],['Sony','A friend, a debt and a parotta.']]},
+  {t:'fight',text:'Clear the constables',foes:COPS_OUT.concat(COPS_IN).map(([x,y])=>({x,y,look:LK.cop,hp:110,dmg:6}))},
+  {t:'reach',x:36.2,y:31.2,r:1.8,text:'Reach Danny\'s cell'},
+  {t:'say',lines:[['Danny','Sony? Sony Sony Sony. You look old.'],['Sony','You look like you have been in jail.'],['Danny','I have. Twelve hours. They fed me idli. I want a lawyer. And a different idli.'],['Sony','Later. The alarm is already ringing.']]},
+  {t:'join',who:['Danny']},
+  {t:'evade',n:4,text:'Lose the police. Break line of sight. Hide in bushes. Shoot the chopper, or steal it from the beach helipad'},
+  {t:'say',lines:[['Danny','Four stars. In one night. The last time I got four stars was in the orphanage. Different kind of stars.'],['Sony','Xavi is next. Somebody said he settled down. Wife, a child, a tulasi in the yard.'],['Danny','Xavi? The one who talked to cars?']]},
+  {t:'end',title:'CHAPTER COMPLETE',text:'Sony and Danny are back together. Xavi is next.'}]});
+const CH_C3=makeChapter({idx:14,key:'cc3',title:'Chapter 3 · Bilal',map:CITY,start:[8.9,31],mates:1,cars:true,police:true,dayClock:true,clock:18*60,
+  setup:w=>{citySetup(w);w.xaviHome=addActor(w,{team:'vip',name:'Xavi',look:LK.kuttan,x:74.6*T,y:50.2*T,angle:Math.PI/2,r:9});},
+  stages:C=>[
+  {t:'say',lines:[['','Danny knows where Xavi settled down: a small house, a tulasi, a cycle in the yard. That was three months ago.'],['Danny','Xavi had a wife and a little boy. He sold his guns and bought a pressure cooker. We laughed at him.'],['Sony','Then why does his house look like that?']]},
+  {t:'reach',x:74.5,y:55.4,r:3,text:'Go to Xavi\'s house in Kadavanthra. Get a car, or hire an auto'},
+  {t:'say',lines:[['','The door is open. The cycle is on its side. A child\'s sandal is on the floor. Xavi is sitting on the step, not talking.'],['Xavi','Three days ago. Bilal and his men. They wanted a favour from the old days. I said no. I had a pressure cooker, Sony. A pressure cooker.'],['Xavi','They are in the godown at Mattancherry. Bilal does not leave a witness, he does not leave a body, and he does not leave the country. I am going to take him apart.'],['Sony','Then we do it together.'],['Xavi','And afterwards?'],['Sony','Afterwards, Kamath. You owe me that. All of you do.'],['Xavi','Deal. I always paid my debts. That is why I am poor.']]},
+  {t:'join',who:['Xavi']},
+  {t:'reach',x:21,y:69,r:5,text:'Drive to the godown at Mattancherry. Bilal is waiting'},
+  {t:'say',lines:[['Bilal','Xavi. Ex-Xavi. Retired Xavi. I came to make you an offer and you gave me a pressure cooker.'],['Xavi','It is a good pressure cooker.'],['Bilal','Pity. I never lose to anyone who owns one. Boys, make it quick. I have a flight.']]},
+  {t:'fight',text:'Fight through Bilal\'s gang',foes:[[17,70],[20,71.5],[24,70],[26,72],[22,67.5],[18,73.5],[25,74]].map(([x,y],i)=>({x,y,hp:120,dmg:7,look:i%2?LK.goon2:LK.goon}))},
+  {t:'say',lines:[['Bilal','Enough. I was not going to fight a pressure cooker on foot.'],['','A helicopter lifts off the godown roof. Bilal at the door with a rifle.'],['Danny','He has a chopper. We have a pressure cooker. This is not a fair fight.'],['Sony','There is a helipad on the beach, Fort Kochi. Or shoot the thing down from here. Use slow-mo. X.']]},
+  {t:'chopper',text:'Shoot down Bilal\'s helicopter. Use slow-mo (X), grenades, or steal the chopper at the beach helipad',x:21,y:66,hp:640},
+  {t:'say',lines:[['Xavi','That was for the boy.'],['Danny','And for the cooker.'],['Sony','Two down. Pappan. The bodyguard.']]},
+  {t:'end',title:'CHAPTER COMPLETE',text:'Bilal is gone. Xavi is with them again. Pappan is next.'}]});
+const CH_C4=makeChapter({idx:15,key:'cc4',title:'Final · Pappan\'s Resignation',map:buildCinema,start:[26.5,36],angle:-Math.PI/2,mates:2,
+  setup:w=>{w.pappanKamath=addActor(w,{team:'vip',name:'Pappan',look:LK.shibu,x:30*T,y:17*T,angle:Math.PI/2,r:9});},
+  stages:C=>[
+  {t:'say',lines:[['','Kadavanthra. A cinema. Kamath has hired the whole hall for a private screening of his own life story. His bodyguard stands next to him. Everyone knows Pappan.'],['Danny','Pappan works for Kamath? Pappan who stole bread for the whole orphanage?'],['Sony','He sent word. He says he wants out. But Kamath does not let his people retire.'],['Xavi','Pappan always said he would retire at thirty. He is forty-one.']]},
+  {t:'reach',x:26.5,y:30,r:2.5,text:'Walk into Screen 2'},
+  {t:'say',lines:[['Kamath','Sony! Nobody invited you. Not even the popcorn.'],['Pappan','Sir, I resign.'],['Kamath','You what?'],['Pappan','I am resigning. Also, I am sorry about what happens next. Not very sorry.'],['Kamath','Kill them all! Pappan, shoot Pappan!']]},
+  {t:'join',who:['Pappan']},
+  {t:'laststand',text:'Fight out of Screen 2. Use slow-mo (X) when they swarm',foes:[{name:'Kamath',look:LK.kamath,x:26.5,y:18,boss:true,hp:560},...[[10,20],[16,19],[22,21],[31,21],[38,19],[44,20]].map(([x,y])=>({x,y,hp:130,dmg:7})),...[[14,23],[26,23],[40,23]].map(([x,y])=>({x,y,hp:110,dmg:7,look:LK.goon2}))]},
+  {t:'say',lines:[['Pappan','That was my last day. I would like to give notice.'],['Danny','You gave notice at gunpoint.'],['Pappan','It is the only kind Kamath understood.'],['Sony','Five of us. Together again. Mercy Home would be proud.'],['Xavi','Mercy Home would charge us rent.']]},
+  {t:'end',title:'THE END',text:'Sony, Danny, Xavi and Pappan walk out of the cinema together. Mammu is in the car with the engine running. Some things never change.'}]});
+const STORY={A:[0,7,8,2,3,9],B:[10,11,8,12],C:[0,13,14,6,15]};
 function startStory(camp,i){progress.camp=camp;G.story={camp,i};saveProgress();startMission(STORY[camp][i],0);}
 /* ---------- procedural soundtrack: tanpura drone, chenda and tabla rhythm, plucked melody ---------- */
 const MU={on:false,step:0,next:0,nb:null,dg:null,rg:null};
@@ -2687,7 +2754,7 @@ function onKill(w,a){if(a.team!=='player'&&a.team!=='ally')SLOW.m=Math.min(1,SLO
   if(a.team==='enemy'||a.team==='boss'){w.hitStop=a.name?.1:.045;w.combo=(w.t-(w.lastKillT||-9)<3.2)?(w.combo||0)+1:1;w.lastKillT=w.t;const bonus=15*w.combo;addCash(w,bonus);
     if(w.combo>=2)toast(w,(['','','DOUBLE KILL','TRIPLE KILL','QUAD KILL'][Math.min(w.combo,4)]||'RAMPAGE')+' · Rs '+bonus);}}
 
-const MISSIONS=[M1,M2,M3,M4,M5,M6,M7,CH_A2,CH_STANDOFF,CH_A_FINAL,CH_B1,CH_B2,CH_B_FINAL];
+const MISSIONS=[M1,M2,M3,M4,M5,M6,M7,CH_A2,CH_STANDOFF,CH_A_FINAL,CH_B1,CH_B2,CH_B_FINAL,CH_C2,CH_C3,CH_C4];
 
 
 
@@ -2696,7 +2763,7 @@ const G={state:'menu',mi:0};
 let progress={};try{progress=JSON.parse(localStorage.getItem('pandavas-progress')||'{}')||{};}catch(e){progress={};}
 function saveProgress(){try{localStorage.setItem('pandavas-progress',JSON.stringify(progress));}catch(e){}}
 function showScreen(id){for(const s of document.querySelectorAll('.screen'))s.classList.toggle('on',s.id===id);$('touch').classList.toggle('on',input.touch&&(id==null||id==='dialog')&&G.state!=='menu');}
-function refreshMenu(){for(const [c,id] of [['A','aCont'],['B','bCont']]){const n=(progress.story&&progress.story[c])||0,len=STORY[c].length;$(id).textContent=n>=len?'Replay finale':n>0?'Continue · Chapter '+(n+1)+' of '+len:'Continue';}$('m7s').innerHTML=progress.m7?'<span class="done">✓ Completed</span> · play again ›':'Play mission 7 ›';if(!window.__shopInit){window.__shopInit=1;$('shopClose').onclick=()=>{G.state='play';showScreen(null);};}$('m6s').innerHTML=progress.m6?'<span class="done">✓ Completed</span> · play again ›':'Play mission 6 ›';$('diff').textContent='Difficulty: '+(progress.hard?'Hard':'Normal');$('comicsT').textContent='Cash Rs '+(progress.cash||0)+' · Comics '+((progress.comics||[]).length)+'/6';$('m5s').innerHTML=progress.m5?'<span class="done">✓ Completed</span> · play again ›':'Play mission 5 ›';$('m1s').innerHTML=progress.m1?'<span class="done">✓ Completed</span> · play again ›':'Play mission 1 ›';$('m2s').innerHTML=progress.m2?'<span class="done">✓ Completed</span> · play again ›':'Play mission 2 ›';$('m4s').innerHTML=progress.m4?'<span class="done">✓ Completed</span> · play again ›':'Play mission 4 ›';$('m3s').innerHTML=progress.m3?'<span class="done">✓ Completed</span> · play again ›':'Play mission 3 ›';$('snd').textContent='Sound: '+(AU.on?'on':'off');}
+function refreshMenu(){for(const [c,id] of [['A','aCont'],['B','bCont'],['C','cCont']]){const n=(progress.story&&progress.story[c])||0,len=STORY[c].length;$(id).textContent=n>=len?'Replay finale':n>0?'Continue · Chapter '+(n+1)+' of '+len:'Continue';}$('m7s').innerHTML=progress.m7?'<span class="done">✓ Completed</span> · play again ›':'Play mission 7 ›';if(!window.__shopInit){window.__shopInit=1;$('shopClose').onclick=()=>{G.state='play';showScreen(null);};}$('m6s').innerHTML=progress.m6?'<span class="done">✓ Completed</span> · play again ›':'Play mission 6 ›';$('diff').textContent='Difficulty: '+(progress.hard?'Hard':'Normal');$('comicsT').textContent='Cash Rs '+(progress.cash||0)+' · Comics '+((progress.comics||[]).length)+'/6';$('m5s').innerHTML=progress.m5?'<span class="done">✓ Completed</span> · play again ›':'Play mission 5 ›';$('m1s').innerHTML=progress.m1?'<span class="done">✓ Completed</span> · play again ›':'Play mission 1 ›';$('m2s').innerHTML=progress.m2?'<span class="done">✓ Completed</span> · play again ›':'Play mission 2 ›';$('m4s').innerHTML=progress.m4?'<span class="done">✓ Completed</span> · play again ›':'Play mission 4 ›';$('m3s').innerHTML=progress.m3?'<span class="done">✓ Completed</span> · play again ›':'Play mission 3 ›';$('snd').textContent='Sound: '+(AU.on?'on':'off');}
 function startMission(i,cp){G.mi=i;progress.last=i;saveProgress();const w=MISSIONS[i].create(cp||0);W_=w;loadoutFor(w,i);w.cam.x=w.player.x;w.cam.y=w.player.y;w.cam.z=baseZoom();spawnHeli(w);computeFlow(w);G.state='play';showScreen(null);
   try{if(input.touch&&document.documentElement.requestFullscreen&&!document.fullscreenElement)document.documentElement.requestFullscreen().then(()=>{try{screen.orientation.lock('landscape').catch(()=>{});}catch(e){}}).catch(()=>{});}catch(e){}
   MISSIONS[i].intro(w);}
@@ -2719,6 +2786,8 @@ const toggleSnd=()=>{AU.on=!AU.on;$('psnd').textContent='Sound: '+(AU.on?'on':'o
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&G.state==='play')pauseGame();});
 $('aNew').onclick=()=>{audioInit();progress.story=progress.story||{};progress.story.A=0;startStory('A',0);};
 $('bNew').onclick=()=>{audioInit();progress.story=progress.story||{};progress.story.B=0;startStory('B',0);};
+$('cNew').onclick=()=>{audioInit();progress.story=progress.story||{};progress.story.C=0;startStory('C',0);};
+$('cCont').onclick=()=>{audioInit();const n=(progress.story&&progress.story.C)||0;startStory('C',Math.min(n,STORY.C.length-1));};
 $('aCont').onclick=()=>{audioInit();const n=(progress.story&&progress.story.A)||0;startStory('A',Math.min(n,STORY.A.length-1));};
 $('bCont').onclick=()=>{audioInit();const n=(progress.story&&progress.story.B)||0;startStory('B',Math.min(n,STORY.B.length-1));};
 $('extraBtn').onclick=()=>{$('extras').hidden=!$('extras').hidden;};
