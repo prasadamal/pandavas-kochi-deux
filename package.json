@@ -1,0 +1,12 @@
+{
+  "name": "pandavas-of-kochi",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0",
+    "three": "0.128.0"
+  }
+}
