@@ -27,7 +27,7 @@ A small top-down crime game set in Kochi, Kerala. It runs in the browser as a si
 
 ## Run
 
-Open `index.html` in a browser. On a phone, hold it sideways and use the on-screen joystick and buttons. On a computer:
+Play it online at **https://prasadamal.github.io/pandavas-kochi-deux/**, or open `index.html` in a browser. On a phone, hold it sideways and use the on-screen joystick and buttons. On a computer:
 
 | Key           | Action           |
 |---------------|------------------|
@@ -38,3 +38,19 @@ Open `index.html` in a browser. On a phone, hold it sideways and use the on-scre
 | P             | Pause            |
 
 The 3D moments load three.js from cdnjs. Without network access the game still runs and skips them.
+
+## Tests
+
+Browser tests in `tests/` play both missions from start to finish, load every checkpoint, check that downed gang members and Sony get helped up, that traffic stays on the road, that the 3D moments run, and that the touch controls appear on a phone.
+
+```sh
+npm install
+npx playwright install chromium
+npm test
+```
+
+The tests jump the player straight to each objective, so they check that the missions work, not how hard they are.
+
+## Deploy
+
+On every push to `main`, GitHub Actions runs the tests and, if they pass, publishes `index.html` to GitHub Pages. Pull requests run the tests only.
