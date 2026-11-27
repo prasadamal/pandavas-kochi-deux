@@ -1,0 +1,1 @@
+Original stylized Kerala game assets. Units: metres. Y up. Place each root at road/ground height. Vehicles face +Z. Wheel nodes are named Wheel_1, Wheel_2, etc. Materials are embedded. Buildings are exterior props. Use your game engine for collision and vehicle control.

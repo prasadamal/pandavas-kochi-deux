@@ -2,6 +2,22 @@
 
 A small top-down crime game set in Kochi, Kerala. It runs in the browser as a single HTML file.
 
+## Latest build (Gangs of Mollywood)
+
+`index.html` is the current game, as published on claude.ai. It needs `people/` and `assets/` beside it. Without them it still runs, with simpler bodies and models.
+
+- **Stories:** Sony's Pandavas and Ayyappan's crew, ending at Tatva resort and "Bilal vs Jacky · coming soon".
+- **People:** realistic Rocketbox characters with motion-captured moves, including Jacky and Bilal.
+- **Weapons:** a weapon wheel and 8 guns with realistic stats; a shop for weapons, clothes and armour.
+- **Kochi:** metro, KSRTC bus, water metro and jankar rides with 3D cinematics. Swimming, with drowning.
+- **Fort Kochi:** a district built from OpenStreetMap, connected by Thoppumpady Bridge.
+- **Kerala assets:** your 107 models as traffic, houses, market stalls, boats, trees and festival props.
+- **Roads:** curved ghat roads in Munnar and the valley.
+- **Vehicles:** KSRTC buses, Kerala autos and Ambassadors.
+- **Music:** film theme or the original theme, switchable in the menu.
+
+Third-party licences are listed in `LICENSES.md`. The conversion tools are in `tools/`.
+
 ## Story mode
 
 Pick a crew on the title screen. Progress saves, and **Continue** resumes where you stopped.

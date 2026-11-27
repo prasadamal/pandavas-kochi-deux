@@ -1,0 +1,6 @@
+<!doctype html><html><body><script src="three.min.js"></script><script src="fflate.min.js"></script><script src="FBXLoader.js"></script><script src="GLTFLoader.js"></script><script src="GLTFExporter.js"></script><script src="SkeletonUtils.js"></script><script src="meshopt_decoder.js"></script><script>
+const mgr=new THREE.LoadingManager();mgr.setURLModifier(u=>/\.tga/i.test(u)?'data:,':u);
+window.loadFBX=u=>new Promise((res,rej)=>new THREE.FBXLoader(mgr).load(u,res,undefined,rej));
+window.loadGLB=u=>new Promise((res,rej)=>{const l=new THREE.GLTFLoader();if(window.MeshoptDecoder)l.setMeshoptDecoder(MeshoptDecoder);l.load(u,res,undefined,rej);});
+window.ready=1;
+</script></body></html>

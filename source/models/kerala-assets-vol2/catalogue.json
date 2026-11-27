@@ -1,0 +1,1002 @@
+[
+  {
+    "id": 1,
+    "name": "Padippura gateway",
+    "category": "Buildings",
+    "file": "models/buildings/001_padippura_gateway.glb",
+    "width_m": 5.78,
+    "depth_m": 3.32,
+    "height_m": 4.56,
+    "triangles": 248
+  },
+  {
+    "id": 2,
+    "name": "Laterite cottage",
+    "category": "Buildings",
+    "file": "models/buildings/002_laterite_cottage.glb",
+    "width_m": 7.08,
+    "depth_m": 5.35,
+    "height_m": 4.62,
+    "triangles": 632
+  },
+  {
+    "id": 3,
+    "name": "Village schoolhouse",
+    "category": "Buildings",
+    "file": "models/buildings/003_village_schoolhouse.glb",
+    "width_m": 9.08,
+    "depth_m": 5.67,
+    "height_m": 5.22,
+    "triangles": 392
+  },
+  {
+    "id": 4,
+    "name": "Pottery shop",
+    "category": "Buildings",
+    "file": "models/buildings/004_pottery_shop.glb",
+    "width_m": 6.08,
+    "depth_m": 5.9,
+    "height_m": 4.62,
+    "triangles": 1336
+  },
+  {
+    "id": 5,
+    "name": "Wayside chapel",
+    "category": "Buildings",
+    "file": "models/buildings/005_wayside_chapel.glb",
+    "width_m": 5.59,
+    "depth_m": 6.42,
+    "height_m": 6.28,
+    "triangles": 988
+  },
+  {
+    "id": 6,
+    "name": "Tiled shrine",
+    "category": "Buildings",
+    "file": "models/buildings/006_tiled_shrine.glb",
+    "width_m": 5.28,
+    "depth_m": 5.77,
+    "height_m": 5.51,
+    "triangles": 568
+  },
+  {
+    "id": 7,
+    "name": "Shuttered godown",
+    "category": "Buildings",
+    "file": "models/buildings/007_shuttered_godown.glb",
+    "width_m": 9.08,
+    "depth_m": 6.05,
+    "height_m": 5.62,
+    "triangles": 464
+  },
+  {
+    "id": 8,
+    "name": "Ferry waiting pavilion",
+    "category": "Buildings",
+    "file": "models/buildings/008_ferry_waiting_pavilion.glb",
+    "width_m": 6.38,
+    "depth_m": 4.55,
+    "height_m": 4.14,
+    "triangles": 308
+  },
+  {
+    "id": 9,
+    "name": "Branch post office",
+    "category": "Buildings",
+    "file": "models/buildings/009_branch_post_office.glb",
+    "width_m": 7.08,
+    "depth_m": 5.83,
+    "height_m": 4.41,
+    "triangles": 580
+  },
+  {
+    "id": 10,
+    "name": "Raised granary",
+    "category": "Buildings",
+    "file": "models/buildings/010_raised_granary.glb",
+    "width_m": 6.23,
+    "depth_m": 5.44,
+    "height_m": 5.26,
+    "triangles": 500
+  },
+  {
+    "id": 11,
+    "name": "Roadster bicycle",
+    "category": "Road vehicles",
+    "file": "models/road_vehicles/011_roadster_bicycle.glb",
+    "width_m": 0.58,
+    "depth_m": 2.03,
+    "height_m": 1.11,
+    "triangles": 488
+  },
+  {
+    "id": 12,
+    "name": "Step-through scooter",
+    "category": "Road vehicles",
+    "file": "models/road_vehicles/012_step_through_scooter.glb",
+    "width_m": 0.58,
+    "depth_m": 2.03,
+    "height_m": 1.2,
+    "triangles": 516
+  },
+  {
+    "id": 13,
+    "name": "Vendor bicycle",
+    "category": "Road vehicles",
+    "file": "models/road_vehicles/013_vendor_bicycle.glb",
+    "width_m": 0.78,
+    "depth_m": 2.04,
+    "height_m": 1.42,
+    "triangles": 548
+  },
+  {
+    "id": 14,
+    "name": "Compact taxi",
+    "category": "Road vehicles",
+    "file": "models/road_vehicles/014_compact_taxi.glb",
+    "width_m": 1.79,
+    "depth_m": 3.7,
+    "height_m": 1.81,
+    "triangles": 604
+  },
+  {
+    "id": 15,
+    "name": "School minibus",
+    "category": "Road vehicles",
+    "file": "models/road_vehicles/015_school_minibus.glb",
+    "width_m": 2.01,
+    "depth_m": 4.85,
+    "height_m": 1.81,
+    "triangles": 604
+  },
+  {
+    "id": 16,
+    "name": "Utility jeep",
+    "category": "Road vehicles",
+    "file": "models/road_vehicles/016_utility_jeep.glb",
+    "width_m": 2.09,
+    "depth_m": 4.5,
+    "height_m": 2.18,
+    "triangles": 708
+  },
+  {
+    "id": 17,
+    "name": "Clinic ambulance",
+    "category": "Road vehicles",
+    "file": "models/road_vehicles/017_clinic_ambulance.glb",
+    "width_m": 1.95,
+    "depth_m": 4.05,
+    "height_m": 1.97,
+    "triangles": 664
+  },
+  {
+    "id": 18,
+    "name": "Hand-pulled market cart",
+    "category": "Road vehicles",
+    "file": "models/road_vehicles/018_hand_pulled_market_cart.glb",
+    "width_m": 1.5,
+    "depth_m": 2.72,
+    "height_m": 1.45,
+    "triangles": 464
+  },
+  {
+    "id": 19,
+    "name": "Farm cargo trailer",
+    "category": "Road vehicles",
+    "file": "models/road_vehicles/019_farm_cargo_trailer.glb",
+    "width_m": 1.68,
+    "depth_m": 3.29,
+    "height_m": 1.51,
+    "triangles": 652
+  },
+  {
+    "id": 20,
+    "name": "Milk delivery moped",
+    "category": "Road vehicles",
+    "file": "models/road_vehicles/020_milk_delivery_moped.glb",
+    "width_m": 1.02,
+    "depth_m": 2.02,
+    "height_m": 1.17,
+    "triangles": 656
+  },
+  {
+    "id": 21,
+    "name": "Dugout canoe",
+    "category": "Backwaters",
+    "file": "models/backwaters/021_dugout_canoe.glb",
+    "width_m": 0.85,
+    "depth_m": 5.0,
+    "height_m": 0.83,
+    "triangles": 104
+  },
+  {
+    "id": 22,
+    "name": "Covered passenger vallam",
+    "category": "Backwaters",
+    "file": "models/backwaters/022_covered_passenger_vallam.glb",
+    "width_m": 2.5,
+    "depth_m": 9.0,
+    "height_m": 2.79,
+    "triangles": 404
+  },
+  {
+    "id": 23,
+    "name": "Kettuvallam houseboat",
+    "category": "Backwaters",
+    "file": "models/backwaters/023_kettuvallam_houseboat.glb",
+    "width_m": 2.9,
+    "depth_m": 10.0,
+    "height_m": 3.18,
+    "triangles": 340
+  },
+  {
+    "id": 24,
+    "name": "Motor fishing boat",
+    "category": "Backwaters",
+    "file": "models/backwaters/024_motor_fishing_boat.glb",
+    "width_m": 1.8,
+    "depth_m": 6.7,
+    "height_m": 3.21,
+    "triangles": 140
+  },
+  {
+    "id": 25,
+    "name": "Rowing vallam",
+    "category": "Backwaters",
+    "file": "models/backwaters/025_rowing_vallam.glb",
+    "width_m": 1.2,
+    "depth_m": 8.0,
+    "height_m": 0.9,
+    "triangles": 116
+  },
+  {
+    "id": 26,
+    "name": "Timber landing jetty",
+    "category": "Backwaters",
+    "file": "models/backwaters/026_timber_landing_jetty.glb",
+    "width_m": 2.87,
+    "depth_m": 5.48,
+    "height_m": 2.48,
+    "triangles": 732
+  },
+  {
+    "id": 27,
+    "name": "Chinese fishing net",
+    "category": "Backwaters",
+    "file": "models/backwaters/027_chinese_fishing_net.glb",
+    "width_m": 4.6,
+    "depth_m": 8.35,
+    "height_m": 6.63,
+    "triangles": 2184
+  },
+  {
+    "id": 28,
+    "name": "Channel marker buoy",
+    "category": "Backwaters",
+    "file": "models/backwaters/028_channel_marker_buoy.glb",
+    "width_m": 1.28,
+    "depth_m": 1.28,
+    "height_m": 1.92,
+    "triangles": 224
+  },
+  {
+    "id": 29,
+    "name": "Mooring bollard",
+    "category": "Backwaters",
+    "file": "models/backwaters/029_mooring_bollard.glb",
+    "width_m": 1.3,
+    "depth_m": 1.05,
+    "height_m": 1.0,
+    "triangles": 96
+  },
+  {
+    "id": 30,
+    "name": "Jetty rope spool",
+    "category": "Backwaters",
+    "file": "models/backwaters/030_jetty_rope_spool.glb",
+    "width_m": 1.08,
+    "depth_m": 1.08,
+    "height_m": 1.6,
+    "triangles": 432
+  },
+  {
+    "id": 31,
+    "name": "Coconut palm",
+    "category": "Vegetation",
+    "file": "models/vegetation/031_coconut_palm.glb",
+    "width_m": 6.56,
+    "depth_m": 6.12,
+    "height_m": 6.59,
+    "triangles": 1800
+  },
+  {
+    "id": 32,
+    "name": "Banana clump",
+    "category": "Vegetation",
+    "file": "models/vegetation/032_banana_clump.glb",
+    "width_m": 4.0,
+    "depth_m": 3.06,
+    "height_m": 3.09,
+    "triangles": 1292
+  },
+  {
+    "id": 33,
+    "name": "Mango tree",
+    "category": "Vegetation",
+    "file": "models/vegetation/033_mango_tree.glb",
+    "width_m": 4.91,
+    "depth_m": 4.79,
+    "height_m": 5.94,
+    "triangles": 1856
+  },
+  {
+    "id": 34,
+    "name": "Jackfruit tree",
+    "category": "Vegetation",
+    "file": "models/vegetation/034_jackfruit_tree.glb",
+    "width_m": 4.62,
+    "depth_m": 4.56,
+    "height_m": 6.5,
+    "triangles": 1536
+  },
+  {
+    "id": 35,
+    "name": "Tapped rubber tree",
+    "category": "Vegetation",
+    "file": "models/vegetation/035_tapped_rubber_tree.glb",
+    "width_m": 3.9,
+    "depth_m": 3.85,
+    "height_m": 5.49,
+    "triangles": 1260
+  },
+  {
+    "id": 36,
+    "name": "Bamboo clump",
+    "category": "Vegetation",
+    "file": "models/vegetation/036_bamboo_clump.glb",
+    "width_m": 2.74,
+    "depth_m": 2.41,
+    "height_m": 4.51,
+    "triangles": 3132
+  },
+  {
+    "id": 37,
+    "name": "Ripening paddy",
+    "category": "Vegetation",
+    "file": "models/vegetation/037_ripening_paddy.glb",
+    "width_m": 1.07,
+    "depth_m": 1.02,
+    "height_m": 1.46,
+    "triangles": 4680
+  },
+  {
+    "id": 38,
+    "name": "Tulasi planter",
+    "category": "Vegetation",
+    "file": "models/vegetation/038_tulasi_planter.glb",
+    "width_m": 1.14,
+    "depth_m": 1.14,
+    "height_m": 1.78,
+    "triangles": 1612
+  },
+  {
+    "id": 39,
+    "name": "Black pepper vine",
+    "category": "Vegetation",
+    "file": "models/vegetation/039_black_pepper_vine.glb",
+    "width_m": 0.88,
+    "depth_m": 0.88,
+    "height_m": 2.35,
+    "triangles": 2568
+  },
+  {
+    "id": 40,
+    "name": "Hibiscus bush",
+    "category": "Vegetation",
+    "file": "models/vegetation/040_hibiscus_bush.glb",
+    "width_m": 1.12,
+    "depth_m": 1.41,
+    "height_m": 0.94,
+    "triangles": 1760
+  },
+  {
+    "id": 41,
+    "name": "Roadside bus shelter",
+    "category": "Street furniture",
+    "file": "models/street_furniture/041_roadside_bus_shelter.glb",
+    "width_m": 3.98,
+    "depth_m": 2.29,
+    "height_m": 3.14,
+    "triangles": 464
+  },
+  {
+    "id": 42,
+    "name": "Direction sign",
+    "category": "Street furniture",
+    "file": "models/street_furniture/042_direction_sign.glb",
+    "width_m": 1.68,
+    "depth_m": 0.17,
+    "height_m": 3.25,
+    "triangles": 85
+  },
+  {
+    "id": 43,
+    "name": "Street lamp",
+    "category": "Street furniture",
+    "file": "models/street_furniture/043_street_lamp.glb",
+    "width_m": 1.46,
+    "depth_m": 0.46,
+    "height_m": 5.89,
+    "triangles": 156
+  },
+  {
+    "id": 44,
+    "name": "Power pole",
+    "category": "Street furniture",
+    "file": "models/street_furniture/044_power_pole.glb",
+    "width_m": 2.24,
+    "depth_m": 0.45,
+    "height_m": 6.1,
+    "triangles": 504
+  },
+  {
+    "id": 45,
+    "name": "Transformer unit",
+    "category": "Street furniture",
+    "file": "models/street_furniture/045_transformer_unit.glb",
+    "width_m": 2.55,
+    "depth_m": 1.58,
+    "height_m": 2.26,
+    "triangles": 228
+  },
+  {
+    "id": 46,
+    "name": "Utility cabinet",
+    "category": "Street furniture",
+    "file": "models/street_furniture/046_utility_cabinet.glb",
+    "width_m": 1.4,
+    "depth_m": 0.58,
+    "height_m": 1.62,
+    "triangles": 144
+  },
+  {
+    "id": 47,
+    "name": "Traffic signal",
+    "category": "Street furniture",
+    "file": "models/street_furniture/047_traffic_signal.glb",
+    "width_m": 0.44,
+    "depth_m": 0.4,
+    "height_m": 3.34,
+    "triangles": 168
+  },
+  {
+    "id": 48,
+    "name": "Pillar postbox",
+    "category": "Street furniture",
+    "file": "models/street_furniture/048_pillar_postbox.glb",
+    "width_m": 0.78,
+    "depth_m": 0.78,
+    "height_m": 1.2,
+    "triangles": 188
+  },
+  {
+    "id": 49,
+    "name": "Road barricade",
+    "category": "Street furniture",
+    "file": "models/street_furniture/049_road_barricade.glb",
+    "width_m": 2.17,
+    "depth_m": 0.51,
+    "height_m": 1.03,
+    "triangles": 192
+  },
+  {
+    "id": 50,
+    "name": "Twin litter bins",
+    "category": "Street furniture",
+    "file": "models/street_furniture/050_twin_litter_bins.glb",
+    "width_m": 1.4,
+    "depth_m": 0.73,
+    "height_m": 0.98,
+    "triangles": 228
+  },
+  {
+    "id": 51,
+    "name": "Produce stall",
+    "category": "Markets",
+    "file": "models/markets/051_produce_stall.glb",
+    "width_m": 2.73,
+    "depth_m": 1.9,
+    "height_m": 2.55,
+    "triangles": 3212
+  },
+  {
+    "id": 52,
+    "name": "Fish stall",
+    "category": "Markets",
+    "file": "models/markets/052_fish_stall.glb",
+    "width_m": 2.73,
+    "depth_m": 1.9,
+    "height_m": 2.55,
+    "triangles": 1349
+  },
+  {
+    "id": 53,
+    "name": "Spice stall",
+    "category": "Markets",
+    "file": "models/markets/053_spice_stall.glb",
+    "width_m": 2.73,
+    "depth_m": 1.9,
+    "height_m": 2.55,
+    "triangles": 1328
+  },
+  {
+    "id": 54,
+    "name": "Tender coconut stand",
+    "category": "Markets",
+    "file": "models/markets/054_tender_coconut_stand.glb",
+    "width_m": 2.73,
+    "depth_m": 1.9,
+    "height_m": 2.55,
+    "triangles": 1580
+  },
+  {
+    "id": 55,
+    "name": "Wooden produce crates",
+    "category": "Markets",
+    "file": "models/markets/055_wooden_produce_crates.glb",
+    "width_m": 1.4,
+    "depth_m": 0.7,
+    "height_m": 0.9,
+    "triangles": 468
+  },
+  {
+    "id": 56,
+    "name": "Jute sack stack",
+    "category": "Markets",
+    "file": "models/markets/056_jute_sack_stack.glb",
+    "width_m": 1.12,
+    "depth_m": 0.74,
+    "height_m": 0.74,
+    "triangles": 880
+  },
+  {
+    "id": 57,
+    "name": "Milk churns",
+    "category": "Markets",
+    "file": "models/markets/057_milk_churns.glb",
+    "width_m": 1.18,
+    "depth_m": 0.36,
+    "height_m": 0.72,
+    "triangles": 1836
+  },
+  {
+    "id": 58,
+    "name": "Folded textile counter",
+    "category": "Markets",
+    "file": "models/markets/058_folded_textile_counter.glb",
+    "width_m": 1.68,
+    "depth_m": 0.86,
+    "height_m": 1.33,
+    "triangles": 336
+  },
+  {
+    "id": 59,
+    "name": "Ice cream pushcart",
+    "category": "Markets",
+    "file": "models/markets/059_ice_cream_pushcart.glb",
+    "width_m": 1.68,
+    "depth_m": 1.68,
+    "height_m": 2.42,
+    "triangles": 328
+  },
+  {
+    "id": 60,
+    "name": "Flower sellers table",
+    "category": "Markets",
+    "file": "models/markets/060_flower_sellers_table.glb",
+    "width_m": 1.31,
+    "depth_m": 0.84,
+    "height_m": 0.94,
+    "triangles": 3404
+  },
+  {
+    "id": 61,
+    "name": "Pulley well",
+    "category": "Home and courtyard",
+    "file": "models/home_and_courtyard/061_pulley_well.glb",
+    "width_m": 2.16,
+    "depth_m": 1.96,
+    "height_m": 2.68,
+    "triangles": 692
+  },
+  {
+    "id": 62,
+    "name": "Rooftop water tank",
+    "category": "Home and courtyard",
+    "file": "models/home_and_courtyard/062_rooftop_water_tank.glb",
+    "width_m": 1.48,
+    "depth_m": 1.48,
+    "height_m": 1.81,
+    "triangles": 420
+  },
+  {
+    "id": 63,
+    "name": "Courtyard clothesline",
+    "category": "Home and courtyard",
+    "file": "models/home_and_courtyard/063_courtyard_clothesline.glb",
+    "width_m": 3.34,
+    "depth_m": 0.14,
+    "height_m": 2.0,
+    "triangles": 204
+  },
+  {
+    "id": 64,
+    "name": "Stone mortar and pestle",
+    "category": "Home and courtyard",
+    "file": "models/home_and_courtyard/064_stone_mortar_and_pestle.glb",
+    "width_m": 0.96,
+    "depth_m": 0.96,
+    "height_m": 1.17,
+    "triangles": 284
+  },
+  {
+    "id": 65,
+    "name": "Coconut scraper",
+    "category": "Home and courtyard",
+    "file": "models/home_and_courtyard/065_coconut_scraper.glb",
+    "width_m": 0.55,
+    "depth_m": 0.91,
+    "height_m": 0.65,
+    "triangles": 96
+  },
+  {
+    "id": 66,
+    "name": "Nilavilakku brass lamp",
+    "category": "Home and courtyard",
+    "file": "models/home_and_courtyard/066_nilavilakku_brass_lamp.glb",
+    "width_m": 0.72,
+    "depth_m": 0.72,
+    "height_m": 1.36,
+    "triangles": 288
+  },
+  {
+    "id": 67,
+    "name": "Earthen water pots",
+    "category": "Home and courtyard",
+    "file": "models/home_and_courtyard/067_earthen_water_pots.glb",
+    "width_m": 0.85,
+    "depth_m": 0.57,
+    "height_m": 0.47,
+    "triangles": 384
+  },
+  {
+    "id": 68,
+    "name": "Woven charpoy",
+    "category": "Home and courtyard",
+    "file": "models/home_and_courtyard/068_woven_charpoy.glb",
+    "width_m": 1.87,
+    "depth_m": 0.83,
+    "height_m": 0.5,
+    "triangles": 432
+  },
+  {
+    "id": 69,
+    "name": "Cane basket",
+    "category": "Home and courtyard",
+    "file": "models/home_and_courtyard/069_cane_basket.glb",
+    "width_m": 0.75,
+    "depth_m": 0.75,
+    "height_m": 0.35,
+    "triangles": 1032
+  },
+  {
+    "id": 70,
+    "name": "Clay cooking hearth",
+    "category": "Home and courtyard",
+    "file": "models/home_and_courtyard/070_clay_cooking_hearth.glb",
+    "width_m": 0.76,
+    "depth_m": 0.94,
+    "height_m": 0.72,
+    "triangles": 312
+  },
+  {
+    "id": 71,
+    "name": "Handloom",
+    "category": "Work and farming",
+    "file": "models/work_and_farming/071_handloom.glb",
+    "width_m": 1.56,
+    "depth_m": 1.01,
+    "height_m": 1.66,
+    "triangles": 876
+  },
+  {
+    "id": 72,
+    "name": "Coir winding bench",
+    "category": "Work and farming",
+    "file": "models/work_and_farming/072_coir_winding_bench.glb",
+    "width_m": 1.33,
+    "depth_m": 0.77,
+    "height_m": 1.1,
+    "triangles": 532
+  },
+  {
+    "id": 73,
+    "name": "Coconut husk pile",
+    "category": "Work and farming",
+    "file": "models/work_and_farming/073_coconut_husk_pile.glb",
+    "width_m": 1.68,
+    "depth_m": 0.78,
+    "height_m": 0.3,
+    "triangles": 1040
+  },
+  {
+    "id": 74,
+    "name": "Paddy seedling bundles",
+    "category": "Work and farming",
+    "file": "models/work_and_farming/074_paddy_seedling_bundles.glb",
+    "width_m": 1.32,
+    "depth_m": 0.85,
+    "height_m": 0.63,
+    "triangles": 1200
+  },
+  {
+    "id": 75,
+    "name": "Irrigation pump",
+    "category": "Work and farming",
+    "file": "models/work_and_farming/075_irrigation_pump.glb",
+    "width_m": 0.82,
+    "depth_m": 1.25,
+    "height_m": 0.68,
+    "triangles": 180
+  },
+  {
+    "id": 76,
+    "name": "Fish drying rack",
+    "category": "Work and farming",
+    "file": "models/work_and_farming/076_fish_drying_rack.glb",
+    "width_m": 2.04,
+    "depth_m": 1.29,
+    "height_m": 0.86,
+    "triangles": 2764
+  },
+  {
+    "id": 77,
+    "name": "Bamboo fish trap",
+    "category": "Work and farming",
+    "file": "models/work_and_farming/077_bamboo_fish_trap.glb",
+    "width_m": 1.05,
+    "depth_m": 1.05,
+    "height_m": 1.3,
+    "triangles": 3168
+  },
+  {
+    "id": 78,
+    "name": "Bamboo ladder",
+    "category": "Work and farming",
+    "file": "models/work_and_farming/078_bamboo_ladder.glb",
+    "width_m": 0.58,
+    "depth_m": 0.75,
+    "height_m": 3.12,
+    "triangles": 432
+  },
+  {
+    "id": 79,
+    "name": "Timber log stack",
+    "category": "Work and farming",
+    "file": "models/work_and_farming/079_timber_log_stack.glb",
+    "width_m": 1.14,
+    "depth_m": 2.61,
+    "height_m": 0.51,
+    "triangles": 504
+  },
+  {
+    "id": 80,
+    "name": "Paddy sheaf",
+    "category": "Work and farming",
+    "file": "models/work_and_farming/080_paddy_sheaf.glb",
+    "width_m": 1.48,
+    "depth_m": 1.42,
+    "height_m": 1.55,
+    "triangles": 408
+  },
+  {
+    "id": 81,
+    "name": "Festival parasol",
+    "category": "Festivals",
+    "file": "models/festivals/081_festival_parasol.glb",
+    "width_m": 1.8,
+    "depth_m": 1.79,
+    "height_m": 3.06,
+    "triangles": 1440
+  },
+  {
+    "id": 82,
+    "name": "Chenda drum",
+    "category": "Festivals",
+    "file": "models/festivals/082_chenda_drum.glb",
+    "width_m": 0.56,
+    "depth_m": 0.56,
+    "height_m": 0.78,
+    "triangles": 592
+  },
+  {
+    "id": 83,
+    "name": "Maddalam drum",
+    "category": "Festivals",
+    "file": "models/festivals/083_maddalam_drum.glb",
+    "width_m": 0.92,
+    "depth_m": 0.63,
+    "height_m": 0.62,
+    "triangles": 171
+  },
+  {
+    "id": 84,
+    "name": "Ilathalam cymbals",
+    "category": "Festivals",
+    "file": "models/festivals/084_ilathalam_cymbals.glb",
+    "width_m": 0.86,
+    "depth_m": 0.4,
+    "height_m": 0.12,
+    "triangles": 256
+  },
+  {
+    "id": 85,
+    "name": "Onam pookalam",
+    "category": "Festivals",
+    "file": "models/festivals/085_onam_pookalam.glb",
+    "width_m": 2.16,
+    "depth_m": 2.16,
+    "height_m": 0.1,
+    "triangles": 1600
+  },
+  {
+    "id": 86,
+    "name": "Pennant string",
+    "category": "Festivals",
+    "file": "models/festivals/086_pennant_string.glb",
+    "width_m": 4.11,
+    "depth_m": 0.11,
+    "height_m": 2.7,
+    "triangles": 540
+  },
+  {
+    "id": 87,
+    "name": "Mango leaf toranam",
+    "category": "Festivals",
+    "file": "models/festivals/087_mango_leaf_toranam.glb",
+    "width_m": 3.62,
+    "depth_m": 0.22,
+    "height_m": 3.05,
+    "triangles": 180
+  },
+  {
+    "id": 88,
+    "name": "Festival flagpole",
+    "category": "Festivals",
+    "file": "models/festivals/088_festival_flagpole.glb",
+    "width_m": 1.69,
+    "depth_m": 0.84,
+    "height_m": 4.75,
+    "triangles": 97
+  },
+  {
+    "id": 89,
+    "name": "Hanging lantern",
+    "category": "Festivals",
+    "file": "models/festivals/089_hanging_lantern.glb",
+    "width_m": 0.76,
+    "depth_m": 0.45,
+    "height_m": 2.21,
+    "triangles": 248
+  },
+  {
+    "id": 90,
+    "name": "Courtyard performance stage",
+    "category": "Festivals",
+    "file": "models/festivals/090_courtyard_performance_stage.glb",
+    "width_m": 3.32,
+    "depth_m": 2.37,
+    "height_m": 3.28,
+    "triangles": 404
+  },
+  {
+    "id": 91,
+    "name": "Laterite wall segment",
+    "category": "Modular scenery",
+    "file": "models/modular_scenery/091_laterite_wall_segment.glb",
+    "width_m": 2.75,
+    "depth_m": 0.37,
+    "height_m": 0.97,
+    "triangles": 240
+  },
+  {
+    "id": 92,
+    "name": "Woven palm fence",
+    "category": "Modular scenery",
+    "file": "models/modular_scenery/092_woven_palm_fence.glb",
+    "width_m": 3.6,
+    "depth_m": 0.17,
+    "height_m": 1.24,
+    "triangles": 1224
+  },
+  {
+    "id": 93,
+    "name": "Courtyard iron gate",
+    "category": "Modular scenery",
+    "file": "models/modular_scenery/093_courtyard_iron_gate.glb",
+    "width_m": 3.59,
+    "depth_m": 0.74,
+    "height_m": 1.93,
+    "triangles": 604
+  },
+  {
+    "id": 94,
+    "name": "Drain culvert",
+    "category": "Modular scenery",
+    "file": "models/modular_scenery/094_drain_culvert.glb",
+    "width_m": 1.75,
+    "depth_m": 2.85,
+    "height_m": 1.03,
+    "triangles": 36
+  },
+  {
+    "id": 95,
+    "name": "River landing steps",
+    "category": "Modular scenery",
+    "file": "models/modular_scenery/095_river_landing_steps.glb",
+    "width_m": 3.6,
+    "depth_m": 3.02,
+    "height_m": 1.3,
+    "triangles": 84
+  },
+  {
+    "id": 96,
+    "name": "Paver path segment",
+    "category": "Modular scenery",
+    "file": "models/modular_scenery/096_paver_path_segment.glb",
+    "width_m": 3.65,
+    "depth_m": 1.03,
+    "height_m": 0.2,
+    "triangles": 132
+  },
+  {
+    "id": 97,
+    "name": "Storm drain grate",
+    "category": "Modular scenery",
+    "file": "models/modular_scenery/097_storm_drain_grate.glb",
+    "width_m": 1.03,
+    "depth_m": 2.02,
+    "height_m": 0.36,
+    "triangles": 180
+  },
+  {
+    "id": 98,
+    "name": "Painted kerb segment",
+    "category": "Modular scenery",
+    "file": "models/modular_scenery/098_painted_kerb_segment.glb",
+    "width_m": 3.43,
+    "depth_m": 0.31,
+    "height_m": 0.22,
+    "triangles": 48
+  },
+  {
+    "id": 99,
+    "name": "Stone wayside bench",
+    "category": "Modular scenery",
+    "file": "models/modular_scenery/099_stone_wayside_bench.glb",
+    "width_m": 2.58,
+    "depth_m": 0.65,
+    "height_m": 1.58,
+    "triangles": 48
+  },
+  {
+    "id": 100,
+    "name": "Canal footbridge",
+    "category": "Modular scenery",
+    "file": "models/modular_scenery/100_canal_footbridge.glb",
+    "width_m": 2.93,
+    "depth_m": 1.26,
+    "height_m": 1.21,
+    "triangles": 432
+  }
+]
