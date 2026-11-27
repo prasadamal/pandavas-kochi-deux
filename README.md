@@ -6,6 +6,22 @@ A small top-down crime game set in Kochi, Kerala. It runs in the browser as a si
 
 1. **1996 · Escape from Mercy Home** (Fort Kochi, night). Young Sony wakes the other four kids, steals the warden's revolver, gets past the gate guard and runs through the forest to the goods train.
 2. **2026 · Kamath's Daughter** (Kochi city). Steal a car, pick up the gang at the Mattancherry godown, take Meera from Kamath's bungalow and escape the police to Fort Kochi beach.
+3. **Open road · Lorry Driver** (`truck/`, 3D). Back a Tata tractor under an 18-tonne container trailer at Cochin Port, drive NH 544 through Edappally, Aluva, Angamaly, Chalakudy and the Paliyekkara toll to Mannuthy, and park in the bay at the Thrissur goods depot (about 82 km of compressed route, 10 to 15 minutes of driving).
+
+### Lorry Driver controls
+
+| Key / touch | Action |
+|---|---|
+| `W` / `↑` / GAS pedal | Accelerate |
+| `S` / `↓` / BRAKE pedal | Brake; hold at a stop to reverse |
+| `A` `D` / `←` `→` / steering wheel | Steer (drag the wheel on a phone) |
+| `C` / CAM | Chase, far, cab (right-hand drive) and top cameras |
+| `M`, `Q` / `E`, A/M − + | Automatic or manual gears, shift down / up |
+| `H` / HORN | Horn |
+| `R` / RECOVER | Put the lorry back on the road |
+| `P` / `Esc` | Pause |
+
+The world comes from the Kochi–Thrissur kit in `truck/assets` (glTF, see `truck/kit-src/KIT_README.md`). Only the roads, trees and buildings within about 1.2 km of the lorry are drawn; traffic and NH milestones are created ahead of you and removed behind. Open `truck/index.html?dev` to get `window.__lorry.autopilot(true)` and `jump(s)` for testing.
 
 ## Features
 
